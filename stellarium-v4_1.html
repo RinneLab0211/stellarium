@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>STELLARIUM - 精密ホロスコープ</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,::before,::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060410;--surf:#0e0726dd;--surf2:#130a2fbb;
+  --bdr:#965aff28;--bdr2:#aa78ff55;
+  --purple:#9b72cf;--purple2:#c4a0ff;
+  --gold:#d4af6e;--gold2:#f0c87a;
+  --text:#e8e0f0;--textd:#b89ed080;--textb:#f5eeff;
+  --glow:#965aff18;
+  --fire:#FF7A5A;--earth:#B8A07A;--air:#88CCE8;--water:#7898D8;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;min-height:100%}
+body{overflow-x:hidden}
+
+/* Stars */
+.stars{pointer-events:none;position:fixed;inset:0;z-index:0}
+.star{background:#fff;border-radius:50%;position:absolute;animation:tw 3s ease-in-out infinite alternate}
+@keyframes tw{from{opacity:.1;transform:scale(.8)}to{opacity:.7;transform:scale(1.2)}}
+
+.wrap{position:relative;z-index:1;max-width:1440px;margin:0 auto;padding:0 16px 80px}
+
+/* Header */
+header{text-align:center;padding:40px 20px 28px;border-bottom:1px solid var(--bdr);margin-bottom:20px}
+.hdr-orn{font-size:.65rem;letter-spacing:.4em;color:var(--gold);opacity:.7;margin-bottom:10px}
+h1{font-family:'Cinzel Decorative',serif;font-size:clamp(1.5rem,4vw,2.8rem);font-weight:700;
+   letter-spacing:.18em;background:linear-gradient(135deg,#c4a0ff,#f0c87a,#c4a0ff);
+   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+h1 em{-webkit-text-fill-color:var(--gold);font-style:normal;margin:0 12px;font-size:.75em}
+.sub{font-family:'Cinzel',serif;color:var(--purple2);letter-spacing:.25em;font-size:.85rem}
+
+/* Input */
+.icard{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:18px 22px;margin-bottom:18px;backdrop-filter:blur(10px)}
+.igrid{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 20px}
+.ib{display:flex;flex-direction:column;gap:6px}
+.ib label{font-family:'Cinzel',serif;font-size:.63rem;letter-spacing:.14em;color:var(--textd)}
+.fr{display:flex;align-items:center;gap:4px}
+.sep{color:var(--textd);font-size:.8rem}
+input[type=number]{background:#ffffff09;border:1px solid var(--bdr);border-radius:6px;color:var(--text);
+  font-family:'JetBrains Mono',monospace;font-size:.82rem;padding:6px 8px;width:64px;
+  -moz-appearance:textfield;transition:border-color .2s}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 2px #9b72cf28}
+input[type=number].sm{width:48px}
+input[type=number].coord{width:88px}
+input[type=text]{background:#ffffff09;border:1px solid var(--bdr);border-radius:6px;color:var(--text);
+  font-family:'EB Garamond',serif;font-size:.88rem;padding:6px 10px;width:100%;transition:border-color .2s}
+input[type=text]:focus{outline:none;border-color:var(--purple)}
+.city-wrap{position:relative;flex:1;min-width:140px}
+.city-dd{position:absolute;top:calc(100%+2px);left:0;right:0;z-index:200;
+  background:#0b0420f8;border:1px solid var(--bdr2);border-radius:8px;overflow:hidden;
+  backdrop-filter:blur(16px);box-shadow:0 8px 32px #000c}
+.city-dd button{display:flex;justify-content:space-between;align-items:center;width:100%;
+  border:none;border-bottom:1px solid var(--bdr);background:0;color:var(--text);cursor:pointer;
+  padding:8px 12px;font-family:'EB Garamond',serif;font-size:.84rem;transition:background .15s}
+.city-dd button:last-child{border-bottom:none}
+.city-dd button:hover{background:#9b72cf22}
+.city-meta{font-family:'JetBrains Mono',monospace;font-size:.64rem;color:var(--textd)}
+.calc-wrap{margin-left:auto}
+.calc-btn{background:linear-gradient(135deg,#6e32be50,#46198c66);border:1px solid var(--purple);
+  border-radius:8px;color:var(--purple2);cursor:pointer;font-family:'Cinzel',serif;
+  font-size:.75rem;letter-spacing:.1em;padding:10px 26px;transition:all .25s;white-space:nowrap}
+.calc-btn:hover:not(:disabled){border-color:var(--purple2);color:var(--textb);box-shadow:0 0 18px #9b72cf40}
+.calc-btn:disabled{opacity:.55;cursor:not-allowed}
+.jd{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--textd);margin-top:6px}
+
+/* Result layout */
+.result{display:flex;flex-direction:column;gap:20px}
+
+/* Section card */
+.scard{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:20px 22px;backdrop-filter:blur(10px)}
+.shdr{font-family:'Cinzel',serif;font-size:.74rem;letter-spacing:.2em;color:var(--gold);
+  border-bottom:1px solid var(--bdr);padding-bottom:8px;margin-bottom:14px}
+
+/* Summary */
+.summary{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.pill{display:flex;align-items:center;gap:7px;background:var(--surf2);border:1px solid var(--bdr);
+  border-radius:18px;padding:5px 13px}
+.pill-lbl{font-family:'Cinzel',serif;font-size:.62rem;color:var(--textd);letter-spacing:.1em}
+.pill-val{font-size:.86rem}
+
+/* Top grid: wheel + tables */
+.top-grid{display:grid;grid-template-columns:480px 1fr;gap:22px}
+@media(max-width:1100px){.top-grid{grid-template-columns:1fr}}
+
+/* Tables */
+.tbl{width:100%;border-collapse:collapse;font-size:.8rem}
+.tbl th{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.12em;color:var(--gold);
+  text-align:left;padding:7px 9px;border-bottom:1px solid var(--bdr);background:#0000002a;white-space:nowrap}
+.tbl td{padding:7px 9px;border-bottom:1px solid #965aff10;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--glow)}
+.tbl tr.ang td{background:#d4af6e09}
+.psym{font-size:1rem;margin-right:4px}
+.pname{font-size:.78rem}
+.ssym{font-size:.95rem;margin-right:3px}
+.deg{font-family:'JetBrains Mono',monospace;font-size:.79rem}
+.min{font-family:'JetBrains Mono',monospace;font-size:.73rem;color:var(--textd)}
+.hcell{font-family:'JetBrains Mono',monospace;font-size:.75rem;text-align:center}
+.badge{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.04em;border:1px solid;border-radius:3px;padding:1px 6px;white-space:nowrap}
+.retro{color:#ff9090;background:#ff646420;border:1px solid #ff64644a;border-radius:3px;padding:1px 6px;font-size:.68rem}
+.hnum{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;
+  background:#9b72cf2a;border-radius:50%;margin-right:6px;font-size:.7rem}
+.atag{color:var(--gold);border:1px solid #d4af6e50;border-radius:3px;padding:1px 4px;font-size:.56rem;margin-left:4px}
+.hmean{font-size:.7rem;color:var(--textd)}
+
+
+/* Bottom grid: aspects + classifications */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media(max-width:900px){.bottom-grid{grid-template-columns:1fr}}
+
+/* Aspects */
+.asp-matrix{overflow-x:auto;margin-bottom:12px}
+.asp-matrix table{border-collapse:collapse;font-size:.88rem}
+.asp-matrix th{text-align:center;padding:5px 8px;font-size:1rem;border-bottom:1px solid var(--bdr)}
+.asp-matrix td.rh{text-align:center;padding:5px 8px;font-size:1rem;border-right:1px solid var(--bdr)}
+.asp-matrix td{text-align:center;padding:3px 6px;border-bottom:1px solid #965aff0c;font-size:1.1rem;cursor:default}
+.asp-list{display:flex;flex-direction:column;gap:4px}
+.asp-row{display:flex;align-items:center;gap:5px;padding:4px 0;border-bottom:1px solid #965aff0c;font-size:.78rem}
+.asp-row:last-child{border-bottom:none}
+.asp-orb{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--textd)}
+.asp-exact{color:gold;font-size:.72rem}
+
+/* Classifications */
+.cls-section{margin-bottom:16px}
+.cls-title{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.16em;color:var(--gold);
+  border-bottom:1px solid var(--bdr);padding-bottom:7px;margin-bottom:10px}
+.cls-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.cls-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cls-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(max-width:700px){.cls-grid-4{grid-template-columns:repeat(2,1fr)}}
+.cls-card{background:var(--surf2);border:1px solid var(--bdr);border-radius:8px;padding:10px}
+.cls-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.cls-badge{font-family:'Cinzel',serif;font-size:.88rem;font-weight:700}
+.cls-cnt{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;opacity:.9}
+.cls-body{font-size:.75rem;color:var(--text);line-height:1.6}
+.cls-none{font-size:.7rem;color:var(--textd)}
+
+canvas{display:block;width:100%;max-width:480px}
+
+/* Aspect groups */
+.asp-groups{display:flex;flex-direction:column;gap:10px;margin-top:2px}
+.asp-group{background:var(--surf2);border:1px solid var(--bdr);border-radius:8px;overflow:hidden}
+.asp-group-hdr{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid;background:#ffffff04}
+.asp-gsym{font-size:1.15rem;line-height:1;flex-shrink:0}
+.asp-gja{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.08em;font-weight:600}
+.asp-gsub{font-size:.64rem;color:var(--textd);font-family:'JetBrains Mono',monospace;margin-left:2px}
+.asp-gcnt{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--textd);
+  background:#ffffff0a;border-radius:10px;padding:1px 7px}
+.asp-items{padding:6px 10px;display:flex;flex-direction:column;gap:2px}
+.asp-item{display:flex;align-items:center;gap:6px;padding:4px 2px;
+  border-bottom:1px solid #965aff0a;font-size:.8rem}
+.asp-item:last-child{border-bottom:none}
+.asp-p1,.asp-p2{white-space:nowrap}
+.asp-sym{font-size:1rem;flex-shrink:0}
+.asp-orb{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--textd)}
+
+/* Responsive */
+@media(max-width:600px){
+  .igrid{gap:10px 14px}
+  .scard{padding:14px 14px}
+}
+
+/* 2画面 */
+.input-wrap{max-width:680px;margin:0 auto;padding:30px 16px 80px}
+.result-header{display:flex;align-items:center;gap:16px;padding:14px 20px 14px;border-bottom:1px solid var(--bdr);margin-bottom:20px}
+.back-btn{background:var(--surf2);border:1px solid var(--bdr2);border-radius:6px;color:var(--purple2);cursor:pointer;font-family:'Cinzel',serif;font-size:.72rem;padding:7px 16px;letter-spacing:.08em;transition:all .2s;white-space:nowrap}
+.back-btn:hover{border-color:var(--purple2);color:var(--textb)}
+.result-title{font-family:'Cinzel',serif;font-size:.8rem;color:var(--gold);letter-spacing:.15em}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+
+<!-- 画面1: 入力 -->
+<div id="screen-input">
+  <div class="input-wrap">
+    <header>
+      <div class="hdr-orn">✦ NATAL CHART ✦</div>
+      <h1>STELL<em>✦</em>RIUM</h1>
+      <div class="sub">精密ホロスコープ · VSOP87 / ELP2000 · Placidus</div>
+    </header>
+    <div class="icard">
+      <div class="igrid">
+        <div class="ib">
+          <label>生年月日</label>
+          <div class="fr">
+            <input type="number" id="year" value="1990" min="1800" max="2100">
+            <span class="sep">/</span>
+            <input type="number" id="month" value="1" min="1" max="12" class="sm">
+            <span class="sep">/</span>
+            <input type="number" id="day" value="1" min="1" max="31" class="sm">
+          </div>
+        </div>
+        <div class="ib">
+          <label>出生時刻</label>
+          <div class="fr">
+            <input type="number" id="hour" value="12" min="0" max="23" class="sm">
+            <span class="sep">:</span>
+            <input type="number" id="minute" value="0" min="0" max="59" class="sm">
+          </div>
+        </div>
+        <div class="ib">
+          <label>UTC+</label>
+          <input type="number" id="tz" value="9" min="-12" max="14" step="0.5" class="sm">
+        </div>
+        <div class="ib city-wrap">
+          <label>出生地</label>
+          <input type="text" id="city" placeholder="都市名・都道府県" autocomplete="off">
+          <div class="city-dd" id="cityDD" style="display:none"></div>
+        </div>
+        <div class="ib">
+          <label>緯度</label>
+          <input type="number" id="lat" value="35.6762" step=".0001" class="coord">
+        </div>
+        <div class="ib">
+          <label>経度</label>
+          <input type="number" id="lon" value="139.6503" step=".0001" class="coord">
+        </div>
+      </div>
+      <div style="margin-top:22px;text-align:center">
+        <button class="calc-btn" id="calcBtn" onclick="calc()">✦ ホロスコープを作成</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 画面2: 結果 -->
+<div id="screen-result" style="display:none">
+  <div class="wrap">
+    <div class="result-header">
+      <button class="back-btn" onclick="goBack()">← 戻る</button>
+      <div class="result-title" id="resultTitle"></div>
+    </div>
+    <div id="out"></div>
+  </div>
+</div>
+
+<script src="https://rinnelab0211.github.io/stellarium/astro-engine-bundle.js"></script>
+<script>
+// Stars
+(()=>{const c=document.getElementById('stars');for(let i=0;i<65;i++){const s=document.createElement('div');s.className='star';const z=(Math.random()*2+1)+'px';s.style.cssText=`width:${z};height:${z};top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*3}s`;c.appendChild(s)}})()
+
+// Cities
+const CITIES=[
+  // 日本 主要都市・都道府県庁所在地
+  {n:'東京',e:'Tokyo',p:'東京都',lat:35.6762,lon:139.6503,tz:9},
+  {n:'大阪',e:'Osaka',p:'大阪府',lat:34.6937,lon:135.5023,tz:9},
+  {n:'札幌',e:'Sapporo',p:'北海道',lat:43.0642,lon:141.3469,tz:9},
+  {n:'福岡',e:'Fukuoka',p:'福岡県',lat:33.5904,lon:130.4017,tz:9},
+  {n:'名古屋',e:'Nagoya',p:'愛知県',lat:35.1815,lon:136.9066,tz:9},
+  {n:'京都',e:'Kyoto',p:'京都府',lat:35.0116,lon:135.7681,tz:9},
+  {n:'神戸',e:'Kobe',p:'兵庫県',lat:34.6913,lon:135.1830,tz:9},
+  {n:'横浜',e:'Yokohama',p:'神奈川県',lat:35.4437,lon:139.6380,tz:9},
+  {n:'さいたま',e:'Saitama',p:'埼玉県',lat:35.8617,lon:139.6455,tz:9},
+  {n:'千葉',e:'Chiba',p:'千葉県',lat:35.6074,lon:140.1065,tz:9},
+  {n:'広島',e:'Hiroshima',p:'広島県',lat:34.3853,lon:132.4553,tz:9},
+  {n:'仙台',e:'Sendai',p:'宮城県',lat:38.2682,lon:140.8694,tz:9},
+  {n:'那覇',e:'Naha',p:'沖縄県',lat:26.2124,lon:127.6809,tz:9},
+  {n:'新潟',e:'Niigata',p:'新潟県',lat:37.9026,lon:139.0232,tz:9},
+  {n:'静岡',e:'Shizuoka',p:'静岡県',lat:34.9756,lon:138.3828,tz:9},
+  {n:'浜松',e:'Hamamatsu',p:'静岡県',lat:34.7103,lon:137.7261,tz:9},
+  {n:'岡山',e:'Okayama',p:'岡山県',lat:34.6618,lon:133.9344,tz:9},
+  {n:'熊本',e:'Kumamoto',p:'熊本県',lat:32.7898,lon:130.7417,tz:9},
+  {n:'鹿児島',e:'Kagoshima',p:'鹿児島県',lat:31.5966,lon:130.5571,tz:9},
+  {n:'長崎',e:'Nagasaki',p:'長崎県',lat:32.7503,lon:129.8779,tz:9},
+  {n:'松山',e:'Matsuyama',p:'愛媛県',lat:33.8416,lon:132.7657,tz:9},
+  {n:'高松',e:'Takamatsu',p:'香川県',lat:34.3401,lon:134.0434,tz:9},
+  {n:'高知',e:'Kochi',p:'高知県',lat:33.5597,lon:133.5311,tz:9},
+  {n:'徳島',e:'Tokushima',p:'徳島県',lat:34.0657,lon:134.5594,tz:9},
+  {n:'大分',e:'Oita',p:'大分県',lat:33.2382,lon:131.6126,tz:9},
+  {n:'宮崎',e:'Miyazaki',p:'宮崎県',lat:31.9111,lon:131.4239,tz:9},
+  {n:'佐賀',e:'Saga',p:'佐賀県',lat:33.2494,lon:130.2988,tz:9},
+  {n:'長野',e:'Nagano',p:'長野県',lat:36.6513,lon:138.1810,tz:9},
+  {n:'松本',e:'Matsumoto',p:'長野県',lat:36.2381,lon:137.9721,tz:9},
+  {n:'金沢',e:'Kanazawa',p:'石川県',lat:36.5944,lon:136.6256,tz:9},
+  {n:'富山',e:'Toyama',p:'富山県',lat:36.6959,lon:137.2137,tz:9},
+  {n:'福井',e:'Fukui',p:'福井県',lat:36.0652,lon:136.2216,tz:9},
+  {n:'甲府',e:'Kofu',p:'山梨県',lat:35.6636,lon:138.5684,tz:9},
+  {n:'宇都宮',e:'Utsunomiya',p:'栃木県',lat:36.5660,lon:139.8836,tz:9},
+  {n:'前橋',e:'Maebashi',p:'群馬県',lat:36.3895,lon:139.0634,tz:9},
+  {n:'水戸',e:'Mito',p:'茨城県',lat:36.3418,lon:140.4468,tz:9},
+  {n:'盛岡',e:'Morioka',p:'岩手県',lat:39.7036,lon:141.1527,tz:9},
+  {n:'青森',e:'Aomori',p:'青森県',lat:40.8222,lon:140.7474,tz:9},
+  {n:'秋田',e:'Akita',p:'秋田県',lat:39.7186,lon:140.1024,tz:9},
+  {n:'山形',e:'Yamagata',p:'山形県',lat:38.2404,lon:140.3633,tz:9},
+  {n:'福島',e:'Fukushima',p:'福島県',lat:37.7503,lon:140.4676,tz:9},
+  {n:'郡山',e:'Koriyama',p:'福島県',lat:37.3985,lon:140.3877,tz:9},
+  {n:'旭川',e:'Asahikawa',p:'北海道',lat:43.7706,lon:142.3650,tz:9},
+  {n:'函館',e:'Hakodate',p:'北海道',lat:41.7688,lon:140.7290,tz:9},
+  {n:'帯広',e:'Obihiro',p:'北海道',lat:42.9236,lon:143.1963,tz:9},
+  {n:'釧路',e:'Kushiro',p:'北海道',lat:42.9849,lon:144.3821,tz:9},
+  {n:'堺',e:'Sakai',p:'大阪府',lat:34.5733,lon:135.4829,tz:9},
+  {n:'姫路',e:'Himeji',p:'兵庫県',lat:34.8156,lon:134.6856,tz:9},
+  {n:'奈良',e:'Nara',p:'奈良県',lat:34.6851,lon:135.8049,tz:9},
+  {n:'和歌山',e:'Wakayama',p:'和歌山県',lat:34.2261,lon:135.1675,tz:9},
+  {n:'大津',e:'Otsu',p:'滋賀県',lat:35.0045,lon:135.8686,tz:9},
+  {n:'津',e:'Tsu',p:'三重県',lat:34.7303,lon:136.5086,tz:9},
+  {n:'四日市',e:'Yokkaichi',p:'三重県',lat:34.9655,lon:136.6220,tz:9},
+  {n:'岐阜',e:'Gifu',p:'岐阜県',lat:35.4231,lon:136.7608,tz:9},
+  {n:'山口',e:'Yamaguchi',p:'山口県',lat:34.1860,lon:131.4706,tz:9},
+  {n:'鳥取',e:'Tottori',p:'鳥取県',lat:35.5011,lon:134.2351,tz:9},
+  {n:'松江',e:'Matsue',p:'島根県',lat:35.4681,lon:133.0486,tz:9},
+  {n:'川崎',e:'Kawasaki',p:'神奈川県',lat:35.5309,lon:139.7028,tz:9},
+  {n:'相模原',e:'Sagamihara',p:'神奈川県',lat:35.5665,lon:139.3727,tz:9},
+  // 海外
+  {n:'ソウル',e:'Seoul',p:'韓国',lat:37.5665,lon:126.978,tz:9},
+  {n:'北京',e:'Beijing',p:'中国',lat:39.9042,lon:116.4074,tz:8},
+  {n:'上海',e:'Shanghai',p:'中国',lat:31.2304,lon:121.4737,tz:8},
+  {n:'香港',e:'Hong Kong',p:'中国',lat:22.3193,lon:114.1694,tz:8},
+  {n:'台北',e:'Taipei',p:'台湾',lat:25.033,lon:121.5654,tz:8},
+  {n:'バンコク',e:'Bangkok',p:'タイ',lat:13.7563,lon:100.5018,tz:7},
+  {n:'シンガポール',e:'Singapore',p:'SG',lat:1.3521,lon:103.8198,tz:8},
+  {n:'ムンバイ',e:'Mumbai',p:'インド',lat:19.076,lon:72.8777,tz:5.5},
+  {n:'デリー',e:'Delhi',p:'インド',lat:28.6139,lon:77.209,tz:5.5},
+  {n:'ドバイ',e:'Dubai',p:'UAE',lat:25.2048,lon:55.2708,tz:4},
+  {n:'モスクワ',e:'Moscow',p:'ロシア',lat:55.7558,lon:37.6173,tz:3},
+  {n:'イスタンブール',e:'Istanbul',p:'トルコ',lat:41.0082,lon:28.9784,tz:3},
+  {n:'カイロ',e:'Cairo',p:'エジプト',lat:30.0444,lon:31.2357,tz:2},
+  {n:'ローマ',e:'Rome',p:'イタリア',lat:41.9028,lon:12.4964,tz:1},
+  {n:'パリ',e:'Paris',p:'フランス',lat:48.8566,lon:2.3522,tz:1},
+  {n:'ベルリン',e:'Berlin',p:'ドイツ',lat:52.52,lon:13.405,tz:1},
+  {n:'ロンドン',e:'London',p:'英国',lat:51.5074,lon:-.1278,tz:0},
+  {n:'ニューヨーク',e:'New York',p:'米国',lat:40.7128,lon:-74.006,tz:-5},
+  {n:'ロサンゼルス',e:'Los Angeles',p:'米国',lat:34.0522,lon:-118.2437,tz:-8},
+  {n:'シカゴ',e:'Chicago',p:'米国',lat:41.8781,lon:-87.6298,tz:-6},
+  {n:'トロント',e:'Toronto',p:'カナダ',lat:43.6532,lon:-79.3832,tz:-5},
+  {n:'サンパウロ',e:'Sao Paulo',p:'ブラジル',lat:-23.5505,lon:-46.6333,tz:-3},
+  {n:'シドニー',e:'Sydney',p:'豪州',lat:-33.8688,lon:151.2093,tz:11},
+]
+const cityEl=document.getElementById('city'), ddEl=document.getElementById('cityDD')
+cityEl.addEventListener('input',function(){
+  const q=this.value.toLowerCase()
+  const v=this.value; const res=v.length<1?[]:CITIES.filter(c=>c.n.includes(v)||c.e.toLowerCase().includes(q)||c.p.includes(v)).slice(0,10)
+  if(res.length){
+    ddEl.style.display='block'
+    ddEl.innerHTML=res.map((c,i)=>`<button onclick="selCity(${CITIES.indexOf(c)})"><span>${c.n} <small style="color:var(--textd)">${c.e}</small></span><span class="city-meta">${c.p} UTC+${c.tz}</span></button>`).join('')
+  } else ddEl.style.display='none'
+})
+document.addEventListener('click',e=>{if(!cityEl.contains(e.target)&&!ddEl.contains(e.target))ddEl.style.display='none'})
+function selCity(i){const c=CITIES[i];cityEl.value=c.n;document.getElementById('lat').value=c.lat;document.getElementById('lon').value=c.lon;document.getElementById('tz').value=c.tz;ddEl.style.display='none'}
+
+// Color maps
+const ECOL={火:'#FF7A5A',地:'#B8A07A',風:'#88CCE8',水:'#7898D8'}
+const QCOL={活動:'#FF9980',不動:'#AA88FF',柔軟:'#80DDAA'}
+const PCOL={陽:'#FFD080',陰:'#88AADD'}
+const ACOL={Conjunction:'#FFCC00',Opposition:'#FF3333',Square:'#FF3333',Semisquare:'#FF6666',Sesquiquadrate:'#FF6666',Trine:'#4488FF',Sextile:'#44AAFF',Semisextile:'#88CCFF',Quincunx:'#AA88DD'}
+const PLCOL={Sun:'#FFD700',Moon:'#C0C8D0',Mercury:'#A8C8E8',Venus:'#FFB6C1',Mars:'#FF6B6B',Jupiter:'#FF8C00',Saturn:'#8B7355',Uranus:'#7FDBFF',Neptune:'#4169E1',Pluto:'#9B59B6'}
+const ELEM={牡羊座:'火',獅子座:'火',射手座:'火',牡牛座:'地',乙女座:'地',山羊座:'地',双子座:'風',天秤座:'風',水瓶座:'風',蟹座:'水',蠍座:'水',魚座:'水'}
+const QUAL={牡羊座:'活動',蟹座:'活動',天秤座:'活動',山羊座:'活動',牡牛座:'不動',獅子座:'不動',蠍座:'不動',水瓶座:'不動',双子座:'柔軟',乙女座:'柔軟',射手座:'柔軟',魚座:'柔軟'}
+const POL={牡羊座:'陽',双子座:'陽',獅子座:'陽',天秤座:'陽',射手座:'陽',水瓶座:'陽',牡牛座:'陰',蟹座:'陰',乙女座:'陰',蠍座:'陰',山羊座:'陰',魚座:'陰'}
+const HMEAN=['自己・外見','財産・価値観','兄弟・交流','家庭・基盤','恋愛・創造','健康・労働','パートナー','死・変容','哲学・旅行','社会・地位','友人・理想','秘密・潜在']
+
+function calc(){
+  if(!window.AstroEngine){alert('エンジン読み込み中です');return}
+  const btn=document.getElementById('calcBtn')
+  btn.disabled=true;btn.textContent='計算中...'
+  setTimeout(()=>{
+    try{
+      const y=+document.getElementById('year').value
+      const mo=+document.getElementById('month').value
+      const d=+document.getElementById('day').value
+      const hh=+document.getElementById('hour').value
+      const mi=+document.getElementById('minute').value
+      const tz=+document.getElementById('tz').value
+      const h=window.AstroEngine.calcHoroscope({
+        year:y,month:mo,day:d,hour:hh,minute:mi,timezone:tz,
+        latitude:+document.getElementById('lat').value,
+        longitude:+document.getElementById('lon').value,
+      })
+      // 画面2へ遷移
+      document.getElementById('screen-input').style.display='none'
+      document.getElementById('screen-result').style.display='block'
+      const pad=n=>String(n).padStart(2,'0')
+      document.getElementById('resultTitle').textContent=
+        y+'/'+pad(mo)+'/'+pad(d)+' '+pad(hh)+':'+pad(mi)+' UTC+'+ tz
+      render(h)
+    }catch(e){console.error(e);alert('計算エラー: '+e.message)}
+    btn.disabled=false;btn.textContent='✦ ホロスコープを作成'
+  },30)
+}
+function goBack(){
+  document.getElementById('screen-result').style.display='none'
+  document.getElementById('screen-input').style.display='block'
+}
+
+function render(h){
+  document.getElementById('out').innerHTML=`
+    <div class="result">
+      <div class="top-grid">
+        <div class="scard" style="padding:14px">
+          <canvas id="wheel" width="480" height="480"></canvas>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <div class="scard" style="overflow-x:auto">
+            ${renderPlanets(h)}
+          </div>
+          <div class="scard" style="overflow-x:auto">
+            ${renderHouses(h)}
+          </div>
+        </div>
+      </div>
+      <div class="bottom-grid">
+        <div class="scard">${renderAspects(h)}</div>
+        <div class="scard">${renderCls(h)}</div>
+      </div>
+    </div>
+  `
+  drawWheel(h)
+}
+
+function renderPlanets(h){
+  const S=h.signs
+  const fmtLon=lon=>{
+    const s=S[Math.floor(lon/30)],d=Math.floor(lon%30),m=Math.floor((lon%30-d)*60)
+    const ec=ECOL[ELEM[s.nameJa]]||'#888'
+    return {s,d,m,ec}
+  }
+  const rows=h.planets.map(p=>{
+    const el=ELEM[p.signJa]||'',ql=QUAL[p.signJa]||'',pl=POL[p.signJa]||''
+    const ec=ECOL[el]||'#888',qc=QCOL[ql]||'#888',pc=PCOL[pl]||'#888'
+    const signObj=S[Math.floor(p.longitude/30)]
+    return `<tr>
+      <td><span class="psym">${p.symbol}</span><span class="pname">${p.nameJa}</span></td>
+      <td><span class="ssym">${signObj.symbol}</span><span style="color:${ec}">${p.signJa}</span></td>
+      <td><span class="deg">${p.degree}°</span><span class="min">${String(p.minute).padStart(2,'0')}'</span></td>
+      <td class="hcell">${p.house}室</td>
+      <td><span class="badge" style="color:${ec};border-color:${ec}44;background:${ec}14">${el}</span></td>
+      <td><span class="badge" style="color:${qc};border-color:${qc}44;background:${qc}14">${ql}</span></td>
+      <td><span class="badge" style="color:${pc};border-color:${pc}44;background:${pc}14">${pl}</span></td>
+      <td>${p.retrograde?'<span class="retro">℞</span>':''}</td>
+    </tr>`
+  }).join('')
+
+  // アングル行
+  const a=h.houses.ascendant, mc=h.houses.midheaven
+  const angles=[
+    {lbl:'ASC',sym:'↑',lon:a},
+    {lbl:'MC', sym:'⊙',lon:mc},
+    {lbl:'DES',sym:'↓',lon:(a+180)%360},
+    {lbl:'IC', sym:'⊙',lon:(mc+180)%360},
+  ]
+  const angRows=angles.map(({lbl,sym,lon})=>{
+    const {s,d,m,ec}=fmtLon(lon)
+    return `<tr style="opacity:.85">
+      <td colspan="2"><span style="font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold);letter-spacing:.1em">${lbl}</span>
+        <span class="ssym" style="margin-left:6px">${s.symbol}</span><span style="color:${ec}">${s.nameJa}</span></td>
+      <td><span class="deg">${d}°</span><span class="min">${String(m).padStart(2,'0')}'</span></td>
+      <td class="hcell" colspan="5"><span style="color:var(--textd);font-size:.7rem">${lbl==='ASC'?'上昇点':lbl==='MC'?'中天':lbl==='DES'?'下降点':'天底'}</span></td>
+    </tr>`
+  }).join('')
+
+  return `<div class="shdr">天体</div>
+  <table class="tbl"><thead><tr><th>天体</th><th>サイン</th><th>度数</th><th>H</th><th>元素</th><th>区分</th><th>極性</th><th>逆行</th></tr></thead>
+  <tbody>${rows}
+  <tr><td colspan="8" style="padding:4px 0;border-bottom:1px solid var(--bdr)"></td></tr>
+  ${angRows}
+  </tbody></table>`
+}
+
+function renderHouses(h){
+  const S=h.signs
+  const rows=Array.from({length:12},(_,i)=>i+1).map(n=>{
+    const lon=h.houses.cusps[n],s=S[Math.floor(lon/30)]
+    const d=Math.floor(lon%30),m=Math.floor((lon%30-d)*60)
+    const ec=ECOL[ELEM[s.nameJa]]||'#888'
+    const isAng=[1,4,7,10].includes(n)
+    const angLabels={1:'ASC',4:'IC',7:'DES',10:'MC'}
+    return `<tr class="${isAng?'ang':''}">
+      <td><span class="hnum">${n}</span>${isAng?`<span class="atag">${angLabels[n]}</span>`:''}</td>
+      <td><span class="ssym">${s.symbol}</span><span style="color:${ec}">${s.nameJa}</span></td>
+      <td><span class="deg">${d}°</span><span class="min">${String(m).padStart(2,'0')}'</span></td>
+      <td class="hmean">${HMEAN[n-1]}</td>
+    </tr>`
+  }).join('')
+  return `<div class="shdr">ハウス・カスプ <span style="font-size:.6rem;color:var(--textd);font-family:'JetBrains Mono',monospace">Placidus</span></div>
+  <table class="tbl"><thead><tr><th>ハウス</th><th>サイン</th><th>カスプ</th><th>意味</th></tr></thead>
+  <tbody>${rows}</tbody></table>`
+}
+
+function renderAspects(h){
+  const pn=name=>{const p=h.planets.find(x=>x.name===name);return p?`${p.symbol}${p.nameJa}`:name}
+
+  const ASP_ORDER=[
+    {type:'Conjunction',   ja:'コンジャンクション', sub:'合 0°',     col:'#FFD700'},
+    {type:'Opposition',    ja:'オポジション',       sub:'衝 180°',   col:'#FF8C00'},
+    {type:'Trine',         ja:'トライン',           sub:'三角 120°', col:'#44BB44'},
+    {type:'Square',        ja:'スクエア',           sub:'矩 90°',    col:'#FF4444'},
+    {type:'Sextile',       ja:'セクスタイル',       sub:'六角 60°',  col:'#00CED1'},
+    {type:'Quincunx',      ja:'クインカンクス',     sub:'補 150°',   col:'#9370DB'},
+    {type:'Semisextile',   ja:'セミセクスタイル',   sub:'30°',       col:'#87CEEB'},
+    {type:'Semisquare',    ja:'セミスクエア',       sub:'45°',       col:'#FFA07A'},
+    {type:'Sesquiquadrate',ja:'セスキクォドレート', sub:'135°',      col:'#DDA0DD'},
+  ]
+
+  const matRows=h.planets.map((p1,i)=>`<tr>
+    <td class="rh" style="color:${PLCOL[p1.name]||'#ccc'}">${p1.symbol}</td>
+    ${h.planets.map((p2,j)=>{
+      if(i===j) return `<td style="background:#9b72cf0a"></td>`
+      if(i>j){
+        const a=h.aspects.find(a=>(a.planet1===p1.name&&a.planet2===p2.name)||(a.planet1===p2.name&&a.planet2===p1.name))
+        const col=a?ACOL[a.type]||'#888':null
+        return `<td title="${a?a.typeJa+' '+a.orb.toFixed(1)+'°':'アスペクトなし'}">${a?`<span style="color:${col};font-size:1.05rem;filter:drop-shadow(0 0 3px ${col}66)">${a.symbol}</span>`:'<span style="color:#965aff18;font-size:.7rem">·</span>'}</td>`
+      }
+      return '<td></td>'
+    }).join('')}
+  </tr>`).join('')
+
+  const groups=ASP_ORDER.map(def=>{
+    const list=h.aspects.filter(a=>a.type===def.type)
+    if(!list.length) return ''
+    const rows=list.map(a=>`
+      <div class="asp-item">
+        <span class="asp-p1">${pn(a.planet1)}</span>
+        <span class="asp-sym" style="color:${def.col};filter:drop-shadow(0 0 4px ${def.col}55)">${a.symbol}</span>
+        <span class="asp-p2">${pn(a.planet2)}</span>
+        ${a.exact?'<span class="asp-exact" title="完全合">★</span>':''}
+        <span class="asp-orb">${a.orb.toFixed(1)}°</span>
+      </div>`).join('')
+    return `<div class="asp-group">
+      <div class="asp-group-hdr" style="border-color:${def.col}44">
+        <span class="asp-gsym" style="color:${def.col};filter:drop-shadow(0 0 5px ${def.col}88)">${list[0].symbol}</span>
+        <span class="asp-gja" style="color:${def.col}">${def.ja}</span>
+        <span class="asp-gsub">${def.sub}</span>
+        <span class="asp-gcnt">${list.length}件</span>
+      </div>
+      <div class="asp-items">${rows}</div>
+    </div>`
+  }).filter(Boolean).join('')
+
+  return `<div class="shdr">アスペクト (${h.aspects.length}件)</div>
+  <div class="asp-matrix">
+    <table>
+      <thead><tr>
+        <td style="width:28px"></td>
+        ${h.planets.map(p=>`<th title="${p.nameJa}" style="color:${PLCOL[p.name]||'#ccc'}">${p.symbol}</th>`).join('')}
+      </tr></thead>
+      <tbody>${matRows}</tbody>
+    </table>
+  </div>
+  <div class="asp-groups">${groups||'<div style="color:var(--textd);font-size:.8rem">アスペクトなし</div>'}</div>`
+}
+
+function renderCls(h){
+  function group(map,col){
+    const cats=[...new Set(Object.values(map))]
+    return cats.map(cat=>{
+      const bodies=h.planets.filter(p=>map[p.signJa]===cat)
+      const c=col[cat]||'#888'
+      return `<div class="cls-card">
+        <div class="cls-hdr"><span class="cls-badge" style="color:${c}">${cat}</span><span class="cls-cnt" style="color:${c}">${bodies.length}</span></div>
+        ${bodies.length?`<div class="cls-body">${bodies.map(p=>`${p.symbol}${p.nameJa}`).join(' · ')}</div>`:'<div class="cls-none">なし</div>'}
+      </div>`
+    }).join('')
+  }
+  return `<div class="shdr">元素・区分</div>
+  <div class="cls-section">
+    <div class="cls-title">四元素</div>
+    <div class="cls-grid-4">${group(ELEM,ECOL)}</div>
+  </div>
+  <div class="cls-section">
+    <div class="cls-title">三区分</div>
+    <div class="cls-grid-3">${group(QUAL,QCOL)}</div>
+  </div>
+  <div class="cls-section">
+    <div class="cls-title">二区分（極性）</div>
+    <div class="cls-grid-2">${group(POL,PCOL)}</div>
+  </div>`
+}
+
+// Canvas wheel
+function drawWheel(h){
+  const cv=document.getElementById('wheel')
+  if(!cv) return
+  const size=480, dpr=Math.min(window.devicePixelRatio||1,2)
+  cv.width=size*dpr; cv.height=size*dpr
+  cv.style.width=size+'px'; cv.style.height=size+'px'
+  const ctx=cv.getContext('2d')
+  ctx.scale(dpr,dpr)
+  const cx=size/2, cy=size/2
+
+  // サンプル準拠の半径
+  const R_SO   = size*0.48   // 星座帯外側
+  const R_SI   = size*0.38   // 星座帯内側＝ハウス線外端
+  const R_NUM  = size*0.34   // ハウス番号リング
+  const R_PLN  = size*0.22   // 惑星配置リング（広い空間）
+  // 中心円なし
+
+  const asc=h.houses.ascendant
+  const toA=lon=>((180-(lon-asc))%360+360)%360*Math.PI/180
+
+  // ── 背景 ──
+  ctx.clearRect(0,0,size,size)
+  ctx.beginPath(); ctx.arc(cx,cy,R_SO,0,2*Math.PI)
+  ctx.fillStyle='#07041a'; ctx.fill()
+
+  // ── 12星座帯 ──
+  const SIGN_BG=[
+    'rgba(95,22,22,.95)','rgba(22,60,22,.95)','rgba(18,42,78,.95)','rgba(32,18,78,.95)',
+    'rgba(95,22,22,.95)','rgba(22,60,22,.95)','rgba(18,42,78,.95)','rgba(32,18,78,.95)',
+    'rgba(95,22,22,.95)','rgba(22,60,22,.95)','rgba(18,42,78,.95)','rgba(32,18,78,.95)',
+  ]
+  const SIGN_COL=['#FF6644','#55CC55','#44AAFF','#9977EE',
+                  '#FF6644','#55CC55','#44AAFF','#9977EE',
+                  '#FF6644','#55CC55','#44AAFF','#9977EE']
+  const SYMS=['\u2648','\u2649','\u264A','\u264B','\u264C','\u264D',
+               '\u264E','\u264F','\u2650','\u2651','\u2652','\u2653']
+
+  for(let i=0;i<12;i++){
+    const aS=toA(i*30), aE=toA((i+1)*30)
+    ctx.beginPath()
+    ctx.arc(cx,cy,R_SO,aS,aE,true)
+    ctx.arc(cx,cy,R_SI,aE,aS,false)
+    ctx.closePath()
+    ctx.fillStyle=SIGN_BG[i]; ctx.fill()
+
+    // 境界線
+    ctx.beginPath()
+    ctx.moveTo(cx+R_SI*Math.cos(aS),cy+R_SI*Math.sin(aS))
+    ctx.lineTo(cx+R_SO*Math.cos(aS),cy+R_SO*Math.sin(aS))
+    ctx.strokeStyle='rgba(180,140,255,.5)'; ctx.lineWidth=0.8; ctx.stroke()
+
+    // 星座記号
+    let amid
+    if(aE>aS){const len=aS+(2*Math.PI-aE);amid=aS-len/2;if(amid<0)amid+=2*Math.PI}
+    else amid=(aS+aE)/2
+    const rf=(R_SO+R_SI)/2
+    ctx.fillStyle=SIGN_COL[i]
+    ctx.font=`bold ${size*0.036}px Arial,sans-serif`
+    ctx.textAlign='center'; ctx.textBaseline='middle'
+    ctx.fillText(SYMS[i],cx+rf*Math.cos(amid),cy+rf*Math.sin(amid))
+  }
+
+  // ── リング境界 ──
+  for(const [r,c,lw] of [
+    [R_SO,'rgba(170,120,255,.65)',1.3],
+    [R_SI,'rgba(170,120,255,.45)',1.0],
+  ]){
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,2*Math.PI)
+    ctx.strokeStyle=c; ctx.lineWidth=lw; ctx.stroke()
+  }
+
+  // ── ハウスカスプ線（R_SI から中心まで貫通） ──
+  for(let n=1;n<=12;n++){
+    const a=toA(h.houses.cusps[n])
+    const isAng=[1,4,7,10].includes(n)
+    ctx.beginPath()
+    ctx.moveTo(cx, cy)  // 中心から
+    ctx.lineTo(cx+R_SI*Math.cos(a), cy+R_SI*Math.sin(a))  // 星座帯内縁まで
+    ctx.strokeStyle=isAng?'rgba(255,200,60,1.0)':'rgba(210,185,255,.85)'
+    ctx.lineWidth=isAng?2.2:1.3; ctx.stroke()
+  }
+
+  // ── ハウス番号（R_NUM リング） ──
+  for(let n=1;n<=12;n++){
+    const cL=h.houses.cusps[n]
+    const nL=h.houses.cusps[n===12?1:n+1]
+    let arc=nL-cL; if(arc<=0) arc+=360
+    const midA=toA(cL+arc/2)
+    const isAng=[1,4,7,10].includes(n)
+    ctx.fillStyle=isAng?'rgba(255,200,60,.9)':'rgba(190,165,255,.75)'
+    ctx.font=`${size*0.022}px Cinzel,serif`
+    ctx.textAlign='center'; ctx.textBaseline='middle'
+    ctx.fillText(String(n),cx+R_NUM*Math.cos(midA),cy+R_NUM*Math.sin(midA))
+  }
+
+  // ── アスペクト線 ──
+  const pos={}
+  h.planets.forEach(p=>{
+    const a=toA(p.longitude)
+    pos[p.name]={x:cx+R_PLN*Math.cos(a),y:cy+R_PLN*Math.sin(a)}
+  })
+  h.aspects.forEach(asp=>{
+    const p1=pos[asp.planet1],p2=pos[asp.planet2]; if(!p1||!p2) return
+    const col=ACOL[asp.type]||'#888'
+    const alpha=Math.max(0.4,0.8-0.06*asp.orb)
+    const r=parseInt(col.slice(1,3),16),g=parseInt(col.slice(3,5),16),b=parseInt(col.slice(5,7),16)
+    ctx.beginPath(); ctx.moveTo(p1.x,p1.y); ctx.lineTo(p2.x,p2.y)
+    ctx.strokeStyle=`rgba(${r},${g},${b},${alpha})`
+    ctx.lineWidth=asp.exact?2.5:1.8; ctx.stroke()
+  })
+
+  // ── 惑星（中心なしの広い空間に大きく配置） ──
+  const placed=[]
+  const pData=h.planets.map(p=>{
+    let a=toA(p.longitude)
+    for(let k=0;k<20;k++){
+      const hit=placed.find(q=>{
+        const dx=(cx+R_PLN*Math.cos(a))-(cx+R_PLN*Math.cos(q))
+        const dy=(cy+R_PLN*Math.sin(a))-(cy+R_PLN*Math.sin(q))
+        return Math.sqrt(dx*dx+dy*dy)<size*0.052
+      })
+      if(!hit) break; a+=0.06
+    }
+    placed.push(a); return {p,a}
+  })
+
+  pData.forEach(({p,a})=>{
+    const px=cx+R_PLN*Math.cos(a), py=cy+R_PLN*Math.sin(a)
+    const col=PLCOL[p.name]||'#e0d8ff'
+    ctx.fillStyle=col
+    ctx.font=`bold ${size*0.048}px Arial,sans-serif`
+    ctx.textAlign='center'; ctx.textBaseline='middle'
+    ctx.fillText(p.symbol,px,py)
+    if(p.retrograde){
+      ctx.fillStyle='#FF9999'
+      ctx.font=`bold ${size*0.018}px sans-serif`
+      ctx.fillText('R',px+size*0.030,py-size*0.032)
+    }
+    ctx.fillStyle='rgba(220,200,255,.8)'
+    ctx.font=`${size*0.016}px monospace`
+    ctx.fillText(p.degree+'\u00b0',px,py+size*0.034)
+  })
+
+  // ── AC/DC/MC/ICラベル（星座帯の外側） ──
+  ;[
+    [asc,'AC','#FFD700'],
+    [h.houses.midheaven,'MC','#88CCFF'],
+    [(asc+180)%360,'DC','#FFD700'],
+    [(h.houses.midheaven+180)%360,'IC','#88CCFF'],
+  ].forEach(([lon,lbl,col])=>{
+    const a=toA(lon), r=R_SO+size*0.020
+    ctx.fillStyle=col
+    ctx.font=`bold ${size*0.020}px Cinzel,serif`
+    ctx.textAlign='center'; ctx.textBaseline='middle'
+    ctx.fillText(lbl,cx+r*Math.cos(a),cy+r*Math.sin(a))
+  })
+}
+
+</script>
+
+</body>
+</html>
