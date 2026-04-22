@@ -593,8 +593,13 @@ function drawWheel(h){
   // 中心円なし
 
   const asc=h.houses.ascendant
-  console.log('ASC:', h.houses.ascendant)
-  console.log('cusps:', JSON.stringify(h.houses.cusps))
+  // cuspsをASCを起点に時計回りに並べ替え
+  const rawCusps=h.houses.cusps
+  const sortedCusps=[0]
+  const pairs=[]
+  for(let i=1;i<=12;i++) pairs.push({house:i,lon:rawCusps[i]})
+  pairs.sort((a,b)=>((a.lon-asc+360)%360)-((b.lon-asc+360)%360))
+  pairs.forEach((p,i)=>sortedCusps[i+1]=p.lon)
   const toA=lon=>((180-(lon-asc))%360+360)%360*Math.PI/180
 
   // ── 背景 ──
@@ -650,7 +655,7 @@ function drawWheel(h){
 
   // ── ハウスカスプ線（R_SI から中心まで貫通） ──
   for(let n=1;n<=12;n++){
-    const a=toA(h.houses.cusps[n])
+    const a=toA(sortedCusps[n])
     const isAng=[1,4,7,10].includes(n)
     ctx.beginPath()
     ctx.moveTo(cx, cy)  // 中心から
@@ -661,8 +666,8 @@ function drawWheel(h){
 
   // ── ハウス番号（R_NUM リング） ──
   for(let n=1;n<=12;n++){
-    const c1=h.houses.cusps[n]
-    const c2=h.houses.cusps[n===12?1:n+1]
+    const c1=sortedCusps[n]
+    const c2=sortedCusps[n===12?1:n+1]
     let arc=c2-c1; if(arc<=0) arc+=360
     const midA=toA(c1+arc/2)
     const isAng=[1,4,7,10].includes(n)
