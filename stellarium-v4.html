@@ -85,9 +85,9 @@ input[type=text]:focus{outline:none;border-color:var(--purple)}
 .pill-lbl{font-family:'Cinzel',serif;font-size:.62rem;color:var(--textd);letter-spacing:.1em}
 .pill-val{font-size:.86rem}
 
-/* Top grid: wheel + tables */
-.top-grid{display:grid;grid-template-columns:480px 1fr;gap:22px}
-@media(max-width:1100px){.top-grid{grid-template-columns:1fr}}
+/* Wheel center */
+.wheel-wrap{display:flex;justify-content:center;margin-bottom:22px}
+.wheel-wrap canvas{width:min(90vw,700px);height:min(90vw,700px)}
 
 /* Tables */
 .tbl{width:100%;border-collapse:collapse;font-size:.8rem}
@@ -111,9 +111,8 @@ input[type=text]:focus{outline:none;border-color:var(--purple)}
 .hmean{font-size:.7rem;color:var(--textd)}
 
 
-/* Bottom grid: aspects + classifications */
-.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
-@media(max-width:900px){.bottom-grid{grid-template-columns:1fr}}
+/* Tables vertical stack */
+.tables-stack{display:flex;flex-direction:column;gap:22px}
 
 /* Aspects */
 .asp-matrix{overflow-x:auto;margin-bottom:12px}
@@ -142,7 +141,7 @@ input[type=text]:focus{outline:none;border-color:var(--purple)}
 .cls-body{font-size:.75rem;color:var(--text);line-height:1.6}
 .cls-none{font-size:.7rem;color:var(--textd)}
 
-canvas{display:block;width:100%;max-width:480px;height:auto}
+canvas{display:block}
 
 /* Aspect groups */
 .asp-groups{display:flex;flex-direction:column;gap:10px;margin-top:2px}
@@ -393,20 +392,12 @@ function goBack(){
 function render(h){
   document.getElementById('out').innerHTML=`
     <div class="result">
-      <div class="top-grid">
-        <div class="scard" style="padding:14px;overflow:hidden">
-          <canvas id="wheel" width="480" height="480"></canvas>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:18px">
-          <div class="scard" style="overflow-x:auto">
-            ${renderPlanets(h)}
-          </div>
-          <div class="scard" style="overflow-x:auto">
-            ${renderHouses(h)}
-          </div>
-        </div>
+      <div class="wheel-wrap">
+        <canvas id="wheel" width="480" height="480"></canvas>
       </div>
-      <div class="bottom-grid">
+      <div class="tables-stack">
+        <div class="scard" style="overflow-x:auto">${renderPlanets(h)}</div>
+        <div class="scard" style="overflow-x:auto">${renderHouses(h)}</div>
         <div class="scard">${renderAspects(h)}</div>
         <div class="scard">${renderCls(h)}</div>
       </div>
