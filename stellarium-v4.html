@@ -390,6 +390,9 @@ function goBack(){
 }
 
 function render(h){
+  console.log('ASC:', h.houses.ascendant)
+  console.log('MC:', h.houses.midheaven)
+  console.log('cusps:', JSON.stringify(h.houses.cusps))
   document.getElementById('out').innerHTML=`
     <div class="result">
       <div class="wheel-wrap">
