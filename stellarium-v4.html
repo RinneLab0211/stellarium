@@ -600,6 +600,7 @@ function drawWheel(h){
   for(let i=1;i<=12;i++) pairs.push({house:i,lon:(rawCusps[i]+180)%360})
   pairs.sort((a,b)=>((a.lon-asc+360)%360)-((b.lon-asc+360)%360))
   pairs.forEach((p,i)=>sortedCusps[i+1]=p.lon)
+  console.log('sortedCusps:', JSON.stringify(sortedCusps))
   const toA=lon=>((180-(lon-asc))%360+360)%360*Math.PI/180
 
   // ── 背景 ──
