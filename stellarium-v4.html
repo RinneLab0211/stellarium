@@ -648,7 +648,7 @@ function drawWheel(h){
 
   // ── ハウスカスプ線（R_SI から中心まで貫通） ──
   for(let n=1;n<=12;n++){
-    const a=(180+h.houses.cusps[n])*Math.PI/180
+    const a=toA(h.houses.cusps[n])
     const isAng=[1,4,7,10].includes(n)
     ctx.beginPath()
     ctx.moveTo(cx, cy)  // 中心から
@@ -662,7 +662,7 @@ function drawWheel(h){
     const c1=h.houses.cusps[n]
     const c2=h.houses.cusps[n===12?1:n+1]
     let arc=c2-c1; if(arc<=0) arc+=360
-    const midA=(180+(c1+arc/2))*Math.PI/180
+    const midA=toA(c1+arc/2)
     const isAng=[1,4,7,10].includes(n)
     ctx.fillStyle=isAng?'rgba(255,200,60,.9)':'rgba(190,165,255,.75)'
     ctx.font=`${size*0.022}px Cinzel,serif`
