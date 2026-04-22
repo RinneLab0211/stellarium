@@ -593,7 +593,7 @@ function drawWheel(h){
   // 中心円なし
 
   const asc=h.houses.ascendant
-  console.log('ASC:', h.asc)
+  console.log('ASC:', h.houses.ascendant)
   console.log('cusps:', JSON.stringify(h.houses.cusps))
   const toA=lon=>((180-(lon-asc))%360+360)%360*Math.PI/180
 
