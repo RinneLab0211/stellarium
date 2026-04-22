@@ -412,7 +412,6 @@ function render(h){
       </div>
     </div>
   `
-  console.log('全データ:', JSON.stringify(h, null, 2))
   drawWheel(h)
 }
 
@@ -593,12 +592,12 @@ function drawWheel(h){
   const R_PLN  = size*0.19   // 惑星配置リング（広い空間）
   // 中心円なし
 
-  const asc=h.houses.ascendant
+  const asc=(h.houses.ascendant+180)%360
   // cuspsをASCを起点に時計回りに並べ替え
   const rawCusps=h.houses.cusps
   const sortedCusps=[0]
   const pairs=[]
-  for(let i=1;i<=12;i++) pairs.push({house:i,lon:rawCusps[i]})
+  for(let i=1;i<=12;i++) pairs.push({house:i,lon:(rawCusps[i]+180)%360})
   pairs.sort((a,b)=>((a.lon-asc+360)%360)-((b.lon-asc+360)%360))
   pairs.forEach((p,i)=>sortedCusps[i+1]=p.lon)
   const toA=lon=>((180-(lon-asc))%360+360)%360*Math.PI/180
