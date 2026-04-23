@@ -580,10 +580,10 @@ function drawWheel(h){
   const cx=size/2, cy=size/2
 
   // サンプル準拠の半径
-  const R_SO   = size*0.43   // 星座帯外側（ラベル分スペース確保）
-  const R_SI   = size*0.33   // 星座帯内側＝ハウス線外端
-  const R_NUM  = size*0.11   // ハウス番号リング（内側寄り）
-  const R_PLN  = size*0.30   // 惑星配置リング（サインリング寄り）
+  const R_SO   = size*0.48   // 星座帯外側
+  const R_SI   = size*0.38   // 星座帯内側（細くする）
+  const R_NUM  = size*0.15   // ハウス番号（少し外側に）
+  const R_PLN  = size*0.28   // 惑星配置（サインリング寄り）
   // 中心円なし
 
   const rawAsc=h.houses.ascendant
