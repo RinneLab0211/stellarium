@@ -103,6 +103,28 @@ select#month,select#day{width:64px}
 
 /* Note */
 .note{font-size:.71rem;color:var(--t3);text-align:center;padding-top:14px;border-top:1px solid var(--bdr);margin-top:16px;font-style:italic;line-height:1.7}
+
+/* Badge */
+.elem-badge{display:inline-block;font-family:'Cinzel',serif;font-size:.57rem;letter-spacing:.07em;border-radius:20px;padding:3px 10px;margin:8px 0 5px;border:1px solid}
+.elem-badge.gift{background:rgba(200,175,100,.1);border-color:rgba(200,175,100,.35);color:#8C7020}
+.elem-badge.strength{background:rgba(180,90,50,.1);border-color:rgba(200,120,80,.35);color:#903520}
+
+/* Personality text */
+.elem-text-block{margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,.06)}
+.elem-text-title{font-family:'Cinzel',serif;font-size:.74rem;letter-spacing:.07em;font-weight:600;margin-bottom:4px}
+.elem-card.fire .elem-text-title{color:var(--fire)}
+.elem-card.earth .elem-text-title{color:var(--earth)}
+.elem-card.air .elem-text-title{color:var(--air)}
+.elem-card.water .elem-text-title{color:var(--water)}
+.elem-text-body{font-size:.79rem;color:var(--t2);line-height:1.65}
+
+/* Dual result */
+.dual-wrap{text-align:center;padding:14px 8px 10px}
+.dual-lbl{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.32em;color:var(--t3);margin-bottom:14px}
+.dual-icons{font-size:3rem;line-height:1;margin-bottom:10px;letter-spacing:.08em}
+.dual-badge{display:inline-block;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.1em;padding:4px 16px;border-radius:20px;background:rgba(200,175,100,.12);border:1px solid rgba(200,175,100,.38);color:#907030;margin-bottom:14px}
+.dual-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.05rem,3vw,1.5rem);letter-spacing:.08em;color:var(--t1);margin-bottom:12px}
+.dual-desc{font-size:1.03rem;color:var(--t2);line-height:1.8;max-width:500px;margin:0 auto}
 </style>
 </head>
 <body>
@@ -192,6 +214,56 @@ const EDEF={
 
 const ORDER=['火','地','風','水']
 
+const ELEM_TEXT={
+  火:[
+    {max:0,  badge:'gift',     title:'鉄のやりぬき女子',   body:'感情に流されず、約束を淡々と守る「信頼度NO.1」の才能。'},
+    {max:1,  badge:'gift',     title:'自分を育てる努力家',  body:'怖がりな自分をなだめながら、一歩ずつ進める「本当の強さ」の持ち主。'},
+    {max:2,  badge:null,       title:'空気を読む司令塔',    body:'勝算があるときだけ、賢く動ける「大人のスマートさ」がある。'},
+    {max:4,  badge:'strength', title:'みんなの太陽',        body:'いるだけでその場がパッと明るくなる！天性の愛されキャラ。'},
+    {max:99, badge:'strength', title:'嵐を呼ぶ革命家',      body:'退屈な日常をブチ壊して、新しいワクワクを創り出す火付け役。'},
+  ],
+  地:[
+    {max:0,  badge:'gift',     title:'夢見る魔法使い',        body:'現実に縛られない「自由すぎる想像力」を持っている証拠。'},
+    {max:1,  badge:'gift',     title:'仕組み作りのプロ',       body:'絶対に失敗しないための「完璧な段取り」を組める才能。'},
+    {max:2,  badge:null,       title:'しっかり者のお姉さん',   body:'丁寧な暮らしを自然に楽しめる、心地よさの達人。'},
+    {max:4,  badge:'strength', title:'形にするプロデューサー', body:'夢を「お金と形」に変える、頼れる実力者。'},
+    {max:99, badge:'strength', title:'本物を見抜く職人',       body:'妥協しない「こだわり」で、最高に質の高い人生を築き上げる人。'},
+  ],
+  風:[
+    {max:0,  badge:'gift',     title:'未来が視える予言者',      body:'言葉にする前に、答えが映像で降ってくる「超・直感」の持ち主。'},
+    {max:1,  badge:'gift',     title:'深掘りのオタク女子',       body:'好きなことを調べさせたら右に出る者はいない、情報の翻訳家。'},
+    {max:2,  badge:null,       title:'サバサバ系・調整役',       body:'ドロドロした関係をサラッとさばける、賢い大人の付き合い。'},
+    {max:4,  badge:'strength', title:'時代のインフルエンサー',   body:'新しいモノを広め、人と人を繋ぐ、みんなの情報のハブ。'},
+    {max:99, badge:'strength', title:'常識を壊す天才',           body:'古い考えを言葉で切り裂く、知性の冒険家。'},
+  ],
+  水:[
+    {max:0,  badge:'gift',     title:'鋼のメンタル・観測者', body:'感情に溺れず、一番正しい答えをズバッと言える「最強の相談役」。'},
+    {max:1,  badge:'gift',     title:'心の修理屋さん',        body:'人の心の痛みを「理論」で解決できる、現代のヒーラー。'},
+    {max:2,  badge:null,       title:'おだやかな癒やし手',    body:'疲れた人が集まってくる、心地よい「陽だまり」のような人。'},
+    {max:4,  badge:'strength', title:'慈しみの女神',          body:'言葉がなくても心が通じ合う、圧倒的な愛に満ちた人。'},
+    {max:99, badge:'strength', title:'すべてを映すミラー',    body:'世界のすべての愛しさを全身で受け止める、神秘的な人。'},
+  ],
+}
+
+const DUAL_TEXT={
+  '火×地':{icons:'🔥🌿',title:'不動のソロ・プロデューサー',
+    body:'熱いビジョンをその手で確かな形にする。企画から実務まで一人で完遂する力。「やりたい」を「できた」まで絶対に見捨てない、究極の実行責任者。'},
+  '火×風':{icons:'🔥💨',title:'瞬発のトレンド・ディレクター',
+    body:'「面白い！」を即座に言葉と形にして放つ。今の空気を掴んで一気に火を点けるブームの仕掛け人。'},
+  '火×水':{icons:'🔥💧',title:'魂の表現者（アーティスト・プレナー）',
+    body:'深い想いを目に見える熱量に変える。誰かの心を震わせ突き動かす、唯一無二のメッセージを発信できる人。'},
+  '地×風':{icons:'🌿💨',title:'知的なライフ・建築家',
+    body:'スマートな戦略を完璧な仕組みに落とし込む。論理と実績を組み合わせて一生モノのシステムを築き上げる隙のない設計士。'},
+  '地×水':{icons:'🌿💧',title:'愛あるコミュニティ・オーナー',
+    body:'温かい共感を安心できる居場所に変える。心と環境の両方を整えて、人を根っこから癒やす、パワースポットの主。'},
+  '風×水':{icons:'💨💧',title:'深層のストーリー・テラー',
+    body:'見えない感情を鮮やかな言葉で解き明かす。魂の叫びを言語化し、新しい気づきを与える知的な導き手。'},
+}
+
+function getElemText(el,cnt){
+  return ELEM_TEXT[el].find(t=>cnt<=t.max)||ELEM_TEXT[el].at(-1)
+}
+
 function calc(){
   if(!window.AstroEngine){alert('エンジン読み込み中です');return}
   const btn=document.getElementById('calcBtn')
@@ -226,18 +298,33 @@ function render(h){
   })
   const total=h.planets.length
 
-  const dom=ORDER.reduce((best,el)=>counts[el]>counts[best]?el:best, ORDER[0])
-  const def=EDEF[dom]
+  const maxCount=Math.max(...ORDER.map(e=>counts[e]))
+  const topElems=ORDER.filter(e=>counts[e]===maxCount)
+  const isDual=topElems.length===2
 
-  // Dominant banner
-  document.getElementById('domCard').innerHTML=`
-    <div class="dom-wrap">
-      <div class="dom-lbl">YOUR DOMINANT ELEMENT</div>
-      <div class="dom-icon">${def.icon}</div>
-      <div class="dom-name" style="color:${def.col}">${def.ja}（${def.en}）のエレメント</div>
-      <div class="dom-desc">あなたは<strong style="color:${def.col}">${def.ja}（${def.en}）</strong>のエレメントが優勢です。${def.tagline}</div>
-    </div>
-  `
+  // Top card: dual or single dominant
+  if(isDual){
+    const dt=DUAL_TEXT[topElems.join('×')]
+    document.getElementById('domCard').innerHTML=`
+      <div class="dual-wrap">
+        <div class="dual-lbl">YOUR ELEMENT TYPE</div>
+        <div class="dual-icons">${dt.icons}</div>
+        <div><span class="dual-badge">ソロ・プロデューサー🌟</span></div>
+        <div class="dual-title">「${dt.title}」</div>
+        <div class="dual-desc">${dt.body}</div>
+      </div>
+    `
+  } else {
+    const def=EDEF[topElems[0]]
+    document.getElementById('domCard').innerHTML=`
+      <div class="dom-wrap">
+        <div class="dom-lbl">YOUR DOMINANT ELEMENT</div>
+        <div class="dom-icon">${def.icon}</div>
+        <div class="dom-name" style="color:${def.col}">${def.ja}（${def.en}）のエレメント</div>
+        <div class="dom-desc">あなたは<strong style="color:${def.col}">${def.ja}（${def.en}）</strong>のエレメントが優勢です。${def.tagline}</div>
+      </div>
+    `
+  }
 
   // Radar labels
   const setRL=(id,el)=>{
@@ -256,11 +343,18 @@ function render(h){
 
   drawRadar(counts)
 
-  // Element cards
+  // Element cards with personality text
   document.getElementById('elemGrid').innerHTML=ORDER.map(el=>{
     const d=EDEF[el], cnt=counts[el], pct=total?Math.round(cnt/total*100):0
     const planets=pByElem[el].map(p=>`${p.symbol}${p.nameJa}`).join(' · ')
-    return `<div class="elem-card ${d.cls}${el===dom?' dominant':''}">
+    const txt=getElemText(el,cnt)
+    const badgeHTML=txt.badge==='gift'
+      ?`<div class="elem-badge gift">裏のギフト✨</div>`
+      :txt.badge==='strength'
+      ?`<div class="elem-badge strength">あなたの強み⭐</div>`
+      :''
+    const isDom=topElems.includes(el)
+    return `<div class="elem-card ${d.cls}${isDom?' dominant':''}">
       <div class="elem-card-hdr">
         <span class="elem-card-icon">${d.icon}</span>
         <div class="elem-card-meta">
@@ -274,6 +368,11 @@ function render(h){
       </div>
       <div class="bar-bg"><div class="bar" style="width:${pct}%"></div></div>
       <div class="elem-planets${planets?'':' empty'}">${planets||'該当する天体なし'}</div>
+      <div class="elem-text-block">
+        ${badgeHTML}
+        <div class="elem-text-title">「${txt.title}」</div>
+        <div class="elem-text-body">${txt.body}</div>
+      </div>
     </div>`
   }).join('')
 }
