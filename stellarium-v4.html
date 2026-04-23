@@ -430,7 +430,7 @@ function renderPlanets(h){
   }).join('')
 
   // アングル行
-  const a=h.houses.ascendant, mc=h.houses.midheaven
+  const a=(h.houses.ascendant+180)%360, mc=h.houses.midheaven
   const angles=[
     {lbl:'ASC',sym:'↑',lon:a},
     {lbl:'MC', sym:'⊙',lon:mc},
