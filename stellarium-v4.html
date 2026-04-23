@@ -778,7 +778,7 @@ function drawWheel(h){
     [(asc+180)%360,'DSC','#FFD700'],
     [(h.houses.midheaven+180)%360,'IC','#88CCFF'],
   ].forEach(([lon,lbl,col])=>{
-    const a=toA(lon), r=R_SO*1.11
+    const a=toA(lon), r=Math.min(R_SO*1.11, size*0.48)
     ctx.fillStyle=col
     ctx.font=`bold ${size*0.030}px Cinzel,serif`
     ctx.textAlign='center'; ctx.textBaseline='middle'
