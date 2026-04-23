@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ELEMENT READING — 四元素診断</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,::before,::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FAF7F2;
+  --card:#FFFCF8;
+  --bdr:#E8E0D5;
+  --bdr2:#CBBFB5;
+  --t1:#3D2B1F;
+  --t2:#6B4F3A;
+  --t3:#9A7D6A;
+  --fire:#C4604A;  --fire-bg:#FFF1EC;  --fire-bdr:#E8C0AE;
+  --earth:#4E8A4C; --earth-bg:#EDF5EB; --earth-bdr:#A6C8A4;
+  --air:#3E8DB4;   --air-bg:#EBF5FD;   --air-bdr:#9CCCDF;
+  --water:#7160B2; --water-bg:#F1EEFF; --water-bdr:#BBAFE0;
+}
+html,body{background:var(--bg);color:var(--t1);font-family:'EB Garamond',serif;min-height:100vh}
+body{overflow-x:hidden}
+.wrap{max-width:700px;margin:0 auto;padding:0 16px 80px}
+
+/* Header */
+header{text-align:center;padding:52px 20px 36px;border-bottom:1px solid var(--bdr);margin-bottom:32px}
+.hdr-orn{font-size:.6rem;letter-spacing:.48em;color:var(--t3);margin-bottom:14px}
+h1{font-family:'Cinzel Decorative',serif;font-size:clamp(1.3rem,3.5vw,2.1rem);font-weight:700;letter-spacing:.14em;color:var(--t1);margin-bottom:10px}
+h1 em{color:var(--fire);font-style:normal;margin:0 10px;font-size:.68em;opacity:.85}
+.sub{font-family:'Cinzel',serif;color:var(--t3);letter-spacing:.22em;font-size:.76rem}
+
+/* Input */
+.icard{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:28px 32px;margin-bottom:28px;box-shadow:0 2px 20px rgba(61,43,31,.06)}
+.ib label{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.16em;color:var(--t3);display:block;margin-bottom:8px}
+.fr{display:flex;align-items:center;gap:6px}
+.sep{color:var(--bdr2);font-size:.85rem}
+select{background:var(--bg);border:1px solid var(--bdr2);border-radius:7px;color:var(--t1);font-family:'JetBrains Mono',monospace;font-size:.8rem;padding:8px 10px;cursor:pointer;transition:border-color .2s,box-shadow .2s}
+select:focus{outline:none;border-color:var(--fire);box-shadow:0 0 0 3px rgba(196,96,74,.1)}
+select#year{width:94px}
+select#month,select#day{width:64px}
+
+.calc-btn{display:block;width:100%;margin-top:24px;background:linear-gradient(135deg,#C4604A 0%,#D07840 100%);border:none;border-radius:10px;color:#fff;cursor:pointer;font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.15em;padding:14px;transition:all .25s;box-shadow:0 2px 14px rgba(196,96,74,.25)}
+.calc-btn:hover:not(:disabled){filter:brightness(1.08);box-shadow:0 4px 24px rgba(196,96,74,.4);transform:translateY(-1px)}
+.calc-btn:active:not(:disabled){transform:none;filter:brightness(.98)}
+.calc-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* Result */
+.result{flex-direction:column;gap:20px}
+.result.show{animation:fadeUp .5s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.scard{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:24px;box-shadow:0 2px 16px rgba(61,43,31,.055)}
+.shdr{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.22em;color:var(--t3);border-bottom:1px solid var(--bdr);padding-bottom:10px;margin-bottom:18px}
+
+/* Dominant banner */
+.dom-wrap{text-align:center;padding:14px 8px 10px}
+.dom-lbl{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.32em;color:var(--t3);margin-bottom:18px}
+.dom-icon{font-size:4rem;line-height:1;margin-bottom:14px}
+.dom-name{font-family:'Cinzel Decorative',serif;font-size:clamp(1.2rem,3.5vw,1.8rem);letter-spacing:.1em;margin-bottom:14px}
+.dom-desc{font-size:1.05rem;color:var(--t2);line-height:1.8;max-width:480px;margin:0 auto}
+
+/* Radar */
+.radar-outer{padding:4px 0}
+.radar-grid{display:grid;grid-template-columns:auto auto auto;grid-template-rows:auto auto auto;gap:8px;place-items:center;padding:4px 8px}
+.rl{text-align:center}
+.rl-icon{font-size:1.7rem;line-height:1;margin-bottom:3px}
+.rl-name{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.1em;font-weight:600}
+.rl-cnt{font-family:'JetBrains Mono',monospace;font-size:1.25rem;font-weight:700;margin-top:1px}
+.rl-pct{font-family:'JetBrains Mono',monospace;font-size:.58rem;opacity:.55;margin-top:1px}
+
+/* Element cards */
+.elem-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.elem-grid{grid-template-columns:1fr}}
+.elem-card{border-radius:12px;padding:16px 18px;border:1px solid;transition:box-shadow .2s,transform .2s}
+.elem-card:hover{transform:translateY(-2px)}
+.elem-card-hdr{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.elem-card-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+.elem-card-meta{flex:1}
+.elem-card-name{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.12em;font-weight:600;margin-bottom:2px}
+.elem-card-signs{font-size:.59rem;opacity:.5;margin-top:1px}
+.elem-card-cnt{text-align:right}
+.elem-card-n{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;line-height:1}
+.elem-card-pct{font-family:'JetBrains Mono',monospace;font-size:.6rem;opacity:.55;text-align:right;margin-top:2px}
+.bar-bg{height:5px;border-radius:3px;background:rgba(0,0,0,.07);overflow:hidden;margin-bottom:9px}
+.bar{height:100%;border-radius:3px;transition:width .9s cubic-bezier(.25,.8,.25,1)}
+.elem-planets{font-size:.78rem;color:var(--t2);line-height:1.65}
+.elem-planets.empty{font-style:italic;opacity:.4}
+
+.elem-card.fire{background:var(--fire-bg);border-color:var(--fire-bdr)}
+.elem-card.fire .elem-card-name,.elem-card.fire .elem-card-n{color:var(--fire)}
+.elem-card.fire .bar{background:var(--fire)}
+.elem-card.earth{background:var(--earth-bg);border-color:var(--earth-bdr)}
+.elem-card.earth .elem-card-name,.elem-card.earth .elem-card-n{color:var(--earth)}
+.elem-card.earth .bar{background:var(--earth)}
+.elem-card.air{background:var(--air-bg);border-color:var(--air-bdr)}
+.elem-card.air .elem-card-name,.elem-card.air .elem-card-n{color:var(--air)}
+.elem-card.air .bar{background:var(--air)}
+.elem-card.water{background:var(--water-bg);border-color:var(--water-bdr)}
+.elem-card.water .elem-card-name,.elem-card.water .elem-card-n{color:var(--water)}
+.elem-card.water .bar{background:var(--water)}
+.elem-card.dominant{box-shadow:0 6px 24px rgba(0,0,0,.09)}
+
+/* Note */
+.note{font-size:.71rem;color:var(--t3);text-align:center;padding-top:14px;border-top:1px solid var(--bdr);margin-top:16px;font-style:italic;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="hdr-orn">✦ ASTROLOGY ✦</div>
+    <h1>ELEMENT<em>✦</em>READING</h1>
+    <div class="sub">四元素診断　Produced by 高瀬リンネ</div>
+  </header>
+
+  <div class="icard">
+    <div class="ib">
+      <label>生年月日</label>
+      <div class="fr">
+        <select id="year"></select>
+        <span class="sep">/</span>
+        <select id="month"></select>
+        <span class="sep">/</span>
+        <select id="day"></select>
+      </div>
+    </div>
+    <button class="calc-btn" id="calcBtn" onclick="calc()">✦ 四元素を診断する</button>
+  </div>
+
+  <div class="result" id="result" style="display:none">
+    <div class="scard" id="domCard"></div>
+    <div class="scard radar-outer">
+      <div class="shdr">四元素レーダー</div>
+      <div class="radar-grid">
+        <div></div>
+        <div class="rl" id="rl-top"></div>
+        <div></div>
+        <div class="rl" id="rl-left"></div>
+        <canvas id="radar"></canvas>
+        <div class="rl" id="rl-right"></div>
+        <div></div>
+        <div class="rl" id="rl-bottom"></div>
+        <div></div>
+      </div>
+    </div>
+    <div class="scard">
+      <div class="shdr">元素バランス</div>
+      <div class="elem-grid" id="elemGrid"></div>
+      <div class="note">※月の位置は生年月日のみでは不正確な場合があります<br>（計算は正午・東京基準）</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://rinnelab0211.github.io/stellarium/astro-engine-bundle.js"></script>
+<script>
+;(()=>{
+  const fill=(id,lo,hi,pad,def)=>{
+    const el=document.getElementById(id)
+    for(let v=lo;v<=hi;v++){
+      const o=document.createElement('option')
+      o.value=v; o.textContent=pad?String(v).padStart(2,'0'):v
+      if(v===def) o.selected=true
+      el.appendChild(o)
+    }
+  }
+  fill('year',1900,2010,false,1990)
+  fill('month',1,12,true,1)
+  fill('day',1,31,true,1)
+})()
+
+const ELEM_MAP={
+  牡羊座:'火',獅子座:'火',射手座:'火',
+  牡牛座:'地',乙女座:'地',山羊座:'地',
+  双子座:'風',天秤座:'風',水瓶座:'風',
+  蟹座:'水', 蠍座:'水', 魚座:'水',
+}
+
+const EDEF={
+  火:{ja:'火',en:'FIRE',icon:'🔥',cls:'fire',col:'#C4604A',
+      signs:'牡羊座 · 獅子座 · 射手座',
+      tagline:'情熱と行動力に溢れ、直感で動くエネルギッシュな性質。勇気をもって新しい道を切り開きます。'},
+  地:{ja:'地',en:'EARTH',icon:'🌿',cls:'earth',col:'#4E8A4C',
+      signs:'牡牛座 · 乙女座 · 山羊座',
+      tagline:'安定と忍耐を重んじる現実的な性質。着実に積み上げ、豊かな感覚的世界を楽しみます。'},
+  風:{ja:'風',en:'AIR',icon:'💨',cls:'air',col:'#3E8DB4',
+      signs:'双子座 · 天秤座 · 水瓶座',
+      tagline:'知性とコミュニケーションを愛する好奇心旺盛な性質。アイデアと繋がりで世界を広げます。'},
+  水:{ja:'水',en:'WATER',icon:'💧',cls:'water',col:'#7160B2',
+      signs:'蟹座 · 蠍座 · 魚座',
+      tagline:'深い感受性と共感力を持つ内省的な性質。豊かな感情と直感が羅針盤となります。'},
+}
+
+const ORDER=['火','地','風','水']
+
+function calc(){
+  if(!window.AstroEngine){alert('エンジン読み込み中です');return}
+  const btn=document.getElementById('calcBtn')
+  btn.disabled=true; btn.textContent='計算中...'
+  setTimeout(()=>{
+    try{
+      const y=+document.getElementById('year').value
+      const mo=+document.getElementById('month').value
+      const d=+document.getElementById('day').value
+      const h=window.AstroEngine.calcHoroscope({
+        year:y,month:mo,day:d,hour:12,minute:0,
+        timezone:9,latitude:35.6762,longitude:139.6503,
+      })
+      render(h)
+      const res=document.getElementById('result')
+      res.style.display='flex'
+      res.classList.remove('show')
+      void res.offsetWidth
+      res.classList.add('show')
+      setTimeout(()=>res.scrollIntoView({behavior:'smooth',block:'start'}),80)
+    }catch(e){console.error(e);alert('計算エラー: '+e.message)}
+    btn.disabled=false; btn.textContent='✦ 四元素を診断する'
+  },30)
+}
+
+function render(h){
+  const counts={火:0,地:0,風:0,水:0}
+  const pByElem={火:[],地:[],風:[],水:[]}
+  h.planets.forEach(p=>{
+    const el=ELEM_MAP[p.signJa]
+    if(el){counts[el]++; pByElem[el].push(p)}
+  })
+  const total=h.planets.length
+
+  const dom=ORDER.reduce((best,el)=>counts[el]>counts[best]?el:best, ORDER[0])
+  const def=EDEF[dom]
+
+  // Dominant banner
+  document.getElementById('domCard').innerHTML=`
+    <div class="dom-wrap">
+      <div class="dom-lbl">YOUR DOMINANT ELEMENT</div>
+      <div class="dom-icon">${def.icon}</div>
+      <div class="dom-name" style="color:${def.col}">${def.ja}（${def.en}）のエレメント</div>
+      <div class="dom-desc">あなたは<strong style="color:${def.col}">${def.ja}（${def.en}）</strong>のエレメントが優勢です。${def.tagline}</div>
+    </div>
+  `
+
+  // Radar labels
+  const setRL=(id,el)=>{
+    const d=EDEF[el], cnt=counts[el], pct=total?Math.round(cnt/total*100):0
+    document.getElementById(id).innerHTML=`
+      <div class="rl-icon">${d.icon}</div>
+      <div class="rl-name" style="color:${d.col}">${d.ja}</div>
+      <div class="rl-cnt" style="color:${d.col}">${cnt}</div>
+      <div class="rl-pct">${pct}%</div>
+    `
+  }
+  setRL('rl-top','火')
+  setRL('rl-right','地')
+  setRL('rl-bottom','風')
+  setRL('rl-left','水')
+
+  drawRadar(counts)
+
+  // Element cards
+  document.getElementById('elemGrid').innerHTML=ORDER.map(el=>{
+    const d=EDEF[el], cnt=counts[el], pct=total?Math.round(cnt/total*100):0
+    const planets=pByElem[el].map(p=>`${p.symbol}${p.nameJa}`).join(' · ')
+    return `<div class="elem-card ${d.cls}${el===dom?' dominant':''}">
+      <div class="elem-card-hdr">
+        <span class="elem-card-icon">${d.icon}</span>
+        <div class="elem-card-meta">
+          <div class="elem-card-name">${d.ja}（${d.en}）</div>
+          <div class="elem-card-signs">${d.signs}</div>
+        </div>
+        <div class="elem-card-cnt">
+          <div class="elem-card-n">${cnt}</div>
+          <div class="elem-card-pct">${pct}%</div>
+        </div>
+      </div>
+      <div class="bar-bg"><div class="bar" style="width:${pct}%"></div></div>
+      <div class="elem-planets${planets?'':' empty'}">${planets||'該当する天体なし'}</div>
+    </div>`
+  }).join('')
+}
+
+function drawRadar(counts){
+  const cv=document.getElementById('radar')
+  const sz=Math.min(Math.round(window.innerWidth*0.52),260)
+  const dpr=Math.min(window.devicePixelRatio||1,2)
+  cv.width=sz*dpr; cv.height=sz*dpr
+  cv.style.width=sz+'px'; cv.style.height=sz+'px'
+  const ctx=cv.getContext('2d')
+  ctx.scale(dpr,dpr)
+  const cx=sz/2, cy=sz/2, R=sz*0.40
+
+  // 火=top, 地=right, 風=bottom, 水=left
+  const angs=[-Math.PI/2, 0, Math.PI/2, Math.PI]
+  const vals=ORDER.map(e=>counts[e]||0)
+  const maxV=Math.max(...vals,1)
+  const ECOL={火:'#C4604A',地:'#4E8A4C',風:'#3E8DB4',水:'#7160B2'}
+
+  // Grid (concentric diamonds)
+  for(let i=1;i<=4;i++){
+    const r=R*(i/4)
+    ctx.beginPath()
+    angs.forEach((a,j)=>{
+      const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a)
+      j===0?ctx.moveTo(x,y):ctx.lineTo(x,y)
+    })
+    ctx.closePath()
+    ctx.strokeStyle=i===4?'rgba(61,43,31,.2)':'rgba(61,43,31,.07)'
+    ctx.lineWidth=i===4?1:.6; ctx.stroke()
+  }
+
+  // Axis lines
+  angs.forEach(a=>{
+    ctx.beginPath(); ctx.moveTo(cx,cy)
+    ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a))
+    ctx.strokeStyle='rgba(61,43,31,.1)'; ctx.lineWidth=.8; ctx.stroke()
+  })
+
+  // Data fill
+  ctx.beginPath()
+  angs.forEach((a,i)=>{
+    const r=R*(vals[i]/maxV)
+    i===0?ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a))
+  })
+  ctx.closePath()
+  ctx.fillStyle='rgba(175,145,125,.2)'; ctx.fill()
+  ctx.strokeStyle='rgba(175,140,115,.55)'; ctx.lineWidth=2; ctx.stroke()
+
+  // Vertex dots
+  angs.forEach((a,i)=>{
+    if(vals[i]===0) return
+    const r=R*(vals[i]/maxV)
+    ctx.beginPath()
+    ctx.arc(cx+r*Math.cos(a),cy+r*Math.sin(a),5,0,2*Math.PI)
+    ctx.fillStyle=ECOL[ORDER[i]]; ctx.fill()
+    ctx.strokeStyle='rgba(255,252,248,.9)'; ctx.lineWidth=1.5; ctx.stroke()
+  })
+}
+</script>
+</body>
+</html>
