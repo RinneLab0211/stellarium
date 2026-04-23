@@ -454,9 +454,7 @@ function renderPlanets(h){
   }).join('')
 
   // アングル行
-  const rawAsc=h.houses.ascendant, mc=h.houses.midheaven
-  const diff=(rawAsc-mc+360)%360
-  const a=(diff>90&&diff<270)?rawAsc:(rawAsc+180)%360
+  const a=h.houses.ascendant, mc=h.houses.midheaven
   const angles=[
     {lbl:'ASC',sym:'↑',lon:a},
     {lbl:'MC', sym:'⊙',lon:mc},
@@ -484,8 +482,7 @@ function renderPlanets(h){
 function renderHouses(h){
   const S=h.signs
   const rows=Array.from({length:12},(_,i)=>i+1).map(n=>{
-    const rawAsc=h.houses.ascendant,mc=h.houses.midheaven,diff=(rawAsc-mc+360)%360,needsCorr=!(diff>90&&diff<270)
-    const lon=(n===4||n===10)?h.houses.cusps[n]:(needsCorr?(h.houses.cusps[n]+180)%360:h.houses.cusps[n]),s=S[Math.floor(lon/30)]
+    const lon=h.houses.cusps[n],s=S[Math.floor(lon/30)]
     const d=Math.floor(lon%30),m=Math.floor((lon%30-d)*60)
     const ec=ECOL[ELEM[s.nameJa]]||'#888'
     const isAng=[1,4,7,10].includes(n)
@@ -611,16 +608,12 @@ function drawWheel(h){
   const R_PLN  = size*0.35   // 惑星配置（内側に移動）
   // 中心円なし
 
-  const rawAsc=h.houses.ascendant
-  const mc=h.houses.midheaven
-  const diff=(rawAsc-mc+360)%360
-  const asc=(diff>90&&diff<270)?rawAsc:(rawAsc+180)%360
-  const needsCorrection=!(diff>90&&diff<270)
+  const asc=h.houses.ascendant
   // cuspsをASCを起点に時計回りに並べ替え
   const rawCusps=h.houses.cusps
   const sortedCusps=[0]
   const pairs=[]
-  for(let i=1;i<=12;i++) pairs.push({house:i,lon:(i===4||i===10)?rawCusps[i]:(needsCorrection?(rawCusps[i]+180)%360:rawCusps[i])})
+  for(let i=1;i<=12;i++) pairs.push({house:i,lon:rawCusps[i]})
   pairs.sort((a,b)=>((a.lon-asc+360)%360)-((b.lon-asc+360)%360))
   pairs.forEach((p,i)=>sortedCusps[i+1]=p.lon)
   const toA=lon=>((180-(lon-asc))%360+360)%360*Math.PI/180
