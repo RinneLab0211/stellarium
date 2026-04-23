@@ -773,17 +773,17 @@ function drawWheel(h){
 
   // ── AC/DC/MC/ICラベル（星座帯の外側） ──
   ;[
-    [asc,'ASC','#FFD700'],
-    [h.houses.midheaven,'MC','#88CCFF'],
-    [(asc+180)%360,'DSC','#FFD700'],
-    [(h.houses.midheaven+180)%360,'IC','#88CCFF'],
-  ].forEach(([lon,lbl,col])=>{
+    [asc,'ASC','#FFD700','left',12],
+    [h.houses.midheaven,'MC','#88CCFF','center',0],
+    [(asc+180)%360,'DSC','#FFD700','right',-12],
+    [(h.houses.midheaven+180)%360,'IC','#88CCFF','center',0],
+  ].forEach(([lon,lbl,col,align,xOff])=>{
     const a=toA(lon), r=Math.min(R_SO*1.11, size*0.48)
     ctx.fillStyle=col
     ctx.font=`bold ${size*0.030}px Cinzel,serif`
-    ctx.textAlign='center'; ctx.textBaseline='middle'
+    ctx.textAlign=align; ctx.textBaseline='middle'
     ctx.save()
-    ctx.fillText(lbl,cx+r*Math.cos(a),cy+r*Math.sin(a))
+    ctx.fillText(lbl,cx+r*Math.cos(a)+xOff,cy+r*Math.sin(a))
     ctx.restore()
   })
 }
