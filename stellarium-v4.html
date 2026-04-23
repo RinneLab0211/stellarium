@@ -190,29 +190,31 @@ canvas{display:block}
         <div class="ib">
           <label>生年月日</label>
           <div class="fr">
-            <input type="number" id="year" value="1990" min="1800" max="2100">
+            <select id="year"></select>
             <span class="sep">/</span>
-            <input type="number" id="month" value="1" min="1" max="12" class="sm">
+            <select id="month" class="sm"></select>
             <span class="sep">/</span>
-            <input type="number" id="day" value="1" min="1" max="31" class="sm">
+            <select id="day" class="sm"></select>
           </div>
         </div>
         <div class="ib">
           <label>出生時刻</label>
           <div class="fr">
-            <input type="number" id="hour" value="12" min="0" max="23" class="sm">
+            <select id="hour" class="sm"></select>
             <span class="sep">:</span>
-            <input type="number" id="minute" value="0" min="0" max="59" class="sm">
+            <select id="minute" class="sm"></select>
           </div>
         </div>
         <div class="ib">
           <label>UTC+</label>
           <input type="number" id="tz" value="9" min="-12" max="14" step="0.5" class="sm">
+          <div><small style="color:#888;font-size:0.7rem">※ UTCは変更しないでください</small></div>
         </div>
         <div class="ib city-wrap">
           <label>出生地</label>
           <input type="text" id="city" placeholder="都市名・都道府県" autocomplete="off">
           <div class="city-dd" id="cityDD" style="display:none"></div>
+          <div><small style="color:#888;font-size:0.7rem">※ 正確な出生地が不明な場合は、最寄りの主要都市名を入力してください（例：Tokyo, Osaka, Sapporo）</small></div>
         </div>
         <div class="ib">
           <label>緯度</label>
@@ -245,6 +247,23 @@ canvas{display:block}
 <script>
 // Stars
 (()=>{const c=document.getElementById('stars');for(let i=0;i<65;i++){const s=document.createElement('div');s.className='star';const z=(Math.random()*2+1)+'px';s.style.cssText=`width:${z};height:${z};top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*3}s`;c.appendChild(s)}})()
+
+// Populate date/time selects
+;(()=>{
+  function opts(el,from,to,pad,selected,step=1){
+    for(let v=from;v<=to;v+=step){
+      const o=document.createElement('option')
+      o.value=v; o.textContent=pad?String(v).padStart(2,'0'):v
+      if(v===selected) o.selected=true
+      el.appendChild(o)
+    }
+  }
+  opts(document.getElementById('year'),1900,2010,false,1990)
+  opts(document.getElementById('month'),1,12,true,1)
+  opts(document.getElementById('day'),1,31,true,1)
+  opts(document.getElementById('hour'),0,23,true,12)
+  opts(document.getElementById('minute'),0,55,true,0,5)
+})()
 
 // Cities
 const CITIES=[
