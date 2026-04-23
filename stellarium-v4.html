@@ -676,8 +676,8 @@ function drawWheel(h){
     ctx.beginPath()
     ctx.moveTo(cx, cy)  // 中心から
     ctx.lineTo(cx+R_SI*Math.cos(a), cy+R_SI*Math.sin(a))  // 星座帯内縁まで
-    ctx.strokeStyle=isAng?'rgba(255,200,60,1.0)':'rgba(210,185,255,.85)'
-    ctx.lineWidth=isAng?2.2:1.3; ctx.stroke()
+    ctx.strokeStyle=isAng?'rgba(255,200,60,1.0)':'rgba(255,255,255,0.15)'
+    ctx.lineWidth=isAng?2.2:0.4; ctx.stroke()
   }
 
   // ── ハウス番号（R_NUM リング） ──
