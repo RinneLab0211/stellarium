@@ -573,11 +573,12 @@ function drawWheel(h){
   const cv=document.getElementById('wheel')
   if(!cv) return
   const size=Math.round(Math.min(window.innerHeight*0.85,window.innerWidth*0.85,750)), dpr=Math.min(window.devicePixelRatio||1,2)
-  cv.width=size*dpr; cv.height=size*dpr
-  cv.style.width=size+'px'; cv.style.height=size+'px'
+  const canvasW=size+40
+  cv.width=canvasW*dpr; cv.height=size*dpr
+  cv.style.width=canvasW+'px'; cv.style.height=size+'px'
   const ctx=cv.getContext('2d')
   ctx.scale(dpr,dpr)
-  const cx=size/2, cy=size/2
+  const cx=canvasW/2, cy=size/2
 
   // サンプル準拠の半径
   const R_SO   = size*0.46   // 星座帯外側
