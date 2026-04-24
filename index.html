@@ -233,7 +233,7 @@ canvas{display:block}
         <div class="ib">
           <label>UTC+</label>
           <input type="number" id="tz" value="9" min="-12" max="14" step="0.5" class="sm">
-          <small style="color:#888;font-size:0.7rem">※ UTCは変更しないでください</small>
+          <small style="color:#888;font-size:0.7rem">※夏時間が適用される地域は、該当期間中UTC+1の調整が必要な場合があります</small>
         </div>
         <div class="ib">
           <label>緯度 / 経度</label>
@@ -370,6 +370,22 @@ const CITIES=[
   {n:'トロント',e:'Toronto',p:'カナダ',lat:43.6532,lon:-79.3832,tz:-5},
   {n:'サンパウロ',e:'Sao Paulo',p:'ブラジル',lat:-23.5505,lon:-46.6333,tz:-3},
   {n:'シドニー',e:'Sydney',p:'豪州',lat:-33.8688,lon:151.2093,tz:11},
+  // 追加都市
+  {n:'ジャカルタ',e:'Jakarta',p:'インドネシア',lat:-6.2088,lon:106.8456,tz:7},
+  {n:'マドリード',e:'Madrid',p:'スペイン',lat:40.4168,lon:-3.7038,tz:1},
+  {n:'アムステルダム',e:'Amsterdam',p:'オランダ',lat:52.3676,lon:4.9041,tz:1},
+  {n:'ウィーン',e:'Vienna',p:'オーストリア',lat:48.2082,lon:16.3738,tz:1},
+  {n:'チューリッヒ',e:'Zurich',p:'スイス',lat:47.3769,lon:8.5417,tz:1},
+  {n:'ウルム',e:'Ulm',p:'ドイツ',lat:48.4011,lon:9.9876,tz:1},
+  {n:'サンフランシスコ',e:'San Francisco',p:'米国',lat:37.7749,lon:-122.4194,tz:-8},
+  {n:'ワシントンDC',e:'Washington DC',p:'米国',lat:38.9072,lon:-77.0369,tz:-5},
+  {n:'バンクーバー',e:'Vancouver',p:'カナダ',lat:49.2827,lon:-123.1207,tz:-8},
+  {n:'メキシコシティ',e:'Mexico City',p:'メキシコ',lat:19.4326,lon:-99.1332,tz:-6},
+  {n:'ブエノスアイレス',e:'Buenos Aires',p:'アルゼンチン',lat:-34.6037,lon:-58.3816,tz:-3},
+  {n:'メルボルン',e:'Melbourne',p:'豪州',lat:-37.8136,lon:144.9631,tz:11},
+  {n:'オークランド',e:'Auckland',p:'ニュージーランド',lat:-36.8485,lon:174.7633,tz:13},
+  {n:'テルアビブ',e:'Tel Aviv',p:'イスラエル',lat:32.0853,lon:34.7818,tz:2},
+  {n:'ヨハネスブルク',e:'Johannesburg',p:'南アフリカ',lat:-26.2041,lon:28.0473,tz:2},
 ]
 const cityEl=document.getElementById('city'), ddEl=document.getElementById('cityDD')
 cityEl.addEventListener('input',function(){
