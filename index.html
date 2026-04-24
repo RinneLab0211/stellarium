@@ -177,6 +177,10 @@ canvas{display:block}
 .back-btn{background:var(--surf2);border:1px solid var(--bdr2);border-radius:6px;color:var(--purple2);cursor:pointer;font-family:'Cinzel',serif;font-size:.72rem;padding:7px 16px;letter-spacing:.08em;transition:all .2s;white-space:nowrap}
 .back-btn:hover{border-color:var(--purple2);color:var(--textb)}
 .result-title{font-family:'Cinzel',serif;font-size:.8rem;color:var(--gold);letter-spacing:.15em}
+.copy-wrap{text-align:center;margin-top:28px;padding-top:20px;border-top:1px solid var(--bdr)}
+.copy-btn{background:linear-gradient(135deg,#3a280088,#5a3d0066);border:1px solid var(--gold);border-radius:8px;color:var(--gold2);cursor:pointer;font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.15em;padding:11px 32px;transition:all .25s;white-space:nowrap}
+.copy-btn:hover{border-color:var(--gold2);color:var(--textb);box-shadow:0 0 22px #d4af6e30}
+.copy-note{font-size:.72rem;color:var(--textd);margin-top:10px}
 </style>
 </head>
 <body>
@@ -371,6 +375,7 @@ document.addEventListener('click',e=>{if(!cityEl.contains(e.target)&&!ddEl.conta
 function selCity(i){const c=CITIES[i];cityEl.value=c.n;document.getElementById('lat').value=c.lat;document.getElementById('lon').value=c.lon;document.getElementById('tz').value=c.tz;ddEl.style.display='none'}
 
 // Color maps
+let _lastH=null
 const ECOL={火:'#FF7A5A',地:'#B8A07A',風:'#88CCE8',水:'#7898D8'}
 const QCOL={活動:'#FF9980',不動:'#AA88FF',柔軟:'#80DDAA'}
 const PCOL={男性:'#FFD080',女性:'#88AADD'}
@@ -416,6 +421,7 @@ function goBack(){
 }
 
 function render(h){
+  _lastH=h
   document.getElementById('out').innerHTML=`
     <div class="result">
       <div class="wheel-wrap">
@@ -426,10 +432,74 @@ function render(h){
         <div class="scard" style="overflow-x:auto">${renderHouses(h)}</div>
         <div class="scard">${renderAspects(h)}</div>
         <div class="scard">${renderCls(h)}</div>
+        <div class="copy-wrap">
+          <button class="copy-btn" id="copyBtn" onclick="copyChart()">✦ Copy Chart Data</button>
+          <div class="copy-note">表示されたデータはご自由にコピー・AI分析にご利用いただけます</div>
+        </div>
       </div>
     </div>
   `
   drawWheel(h)
+}
+
+function buildChartText(){
+  const h=_lastH; if(!h) return ''
+  const S=h.signs
+  const pad2=n=>String(n).padStart(2,'0')
+  const fmtDeg=(lon)=>{const d=Math.floor(lon%30),m=Math.floor((lon%30-d)*60);return `${d}°${pad2(m)}'`}
+  const lines=[]
+
+  lines.push('── 天体配置 ─────────────────────')
+  h.planets.forEach(p=>{
+    const s=S[Math.floor(p.longitude/30)]
+    lines.push(`${p.symbol} ${p.nameJa.padEnd(4,'　')} ${s.nameJa} ${fmtDeg(p.longitude)}  ${p.house}室${p.retrograde?' ℞':''}`)
+  })
+  const a=h.houses.ascendant,mc=h.houses.midheaven
+  lines.push('  ASC  '+S[Math.floor(a/30)].nameJa+' '+fmtDeg(a))
+  lines.push('  MC   '+S[Math.floor(mc/30)].nameJa+' '+fmtDeg(mc))
+  lines.push('  DSC  '+S[Math.floor((a+180)%360/30)].nameJa+' '+fmtDeg((a+180)%360))
+  lines.push('  IC   '+S[Math.floor((mc+180)%360/30)].nameJa+' '+fmtDeg((mc+180)%360))
+
+  lines.push('')
+  lines.push('── ハウス・カスプ (Placidus) ─────────')
+  for(let n=1;n<=12;n++){
+    const lon=h.houses.cusps[n],s=S[Math.floor(lon/30)]
+    lines.push(` ${String(n).padStart(2)}室  ${s.nameJa} ${fmtDeg(lon)}`)
+  }
+
+  lines.push('')
+  lines.push(`── アスペクト (${h.aspects.length}件) ──────────────`)
+  h.aspects.forEach(asp=>{
+    const p1=h.planets.find(p=>p.name===asp.planet1),p2=h.planets.find(p=>p.name===asp.planet2)
+    if(p1&&p2) lines.push(`${p1.symbol}${p1.nameJa} ${asp.symbol} ${p2.symbol}${p2.nameJa}  ${asp.typeJa}  ${asp.orb.toFixed(1)}°`)
+  })
+
+  lines.push('')
+  lines.push('── 元素・区分 ───────────────────')
+  ;['火','地','風','水'].forEach(el=>{
+    const ps=h.planets.filter(p=>ELEM[p.signJa]===el)
+    lines.push(`${el}：${ps.length?ps.map(p=>p.symbol+p.nameJa).join(' · '):'なし'}`)
+  })
+  ;['活動','不動','柔軟'].forEach(ql=>{
+    const ps=h.planets.filter(p=>QUAL[p.signJa]===ql)
+    lines.push(`${ql}：${ps.length?ps.map(p=>p.symbol+p.nameJa).join(' · '):'なし'}`)
+  })
+  ;['男性','女性'].forEach(pl=>{
+    const ps=h.planets.filter(p=>POL[p.signJa]===pl)
+    lines.push(`${pl}：${ps.length?ps.map(p=>p.symbol+p.nameJa).join(' · '):'なし'}`)
+  })
+
+  return lines.join('\n')
+}
+
+function copyChart(){
+  const btn=document.getElementById('copyBtn')
+  const text=buildChartText()
+  if(!text) return
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='✦ Copied'
+    setTimeout(()=>{btn.textContent='✦ Copy Chart Data'},2000)
+  })
 }
 
 function renderPlanets(h){
