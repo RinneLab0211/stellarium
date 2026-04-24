@@ -476,17 +476,22 @@ function buildChartText(){
 
   lines.push('')
   lines.push('── 元素・区分 ───────────────────')
+  const cnt=(map,keys)=>keys.map(k=>{const n=h.planets.filter(p=>map[p.signJa]===k).length;return `${k}${n}個`}).join(' / ')
+  lines.push('四元素：'+cnt(ELEM,['火','地','風','水']))
+  lines.push('三区分：'+cnt(QUAL,['活動','不動','柔軟']))
+  lines.push('二区分：'+cnt(POL,['男性','女性']))
+  lines.push('')
   ;['火','地','風','水'].forEach(el=>{
     const ps=h.planets.filter(p=>ELEM[p.signJa]===el)
-    lines.push(`${el}：${ps.length?ps.map(p=>p.symbol+p.nameJa).join(' · '):'なし'}`)
+    lines.push(`  ${el}：${ps.length?ps.map(p=>p.symbol+p.nameJa).join(' · '):'なし'}`)
   })
   ;['活動','不動','柔軟'].forEach(ql=>{
     const ps=h.planets.filter(p=>QUAL[p.signJa]===ql)
-    lines.push(`${ql}：${ps.length?ps.map(p=>p.symbol+p.nameJa).join(' · '):'なし'}`)
+    lines.push(`  ${ql}：${ps.length?ps.map(p=>p.symbol+p.nameJa).join(' · '):'なし'}`)
   })
   ;['男性','女性'].forEach(pl=>{
     const ps=h.planets.filter(p=>POL[p.signJa]===pl)
-    lines.push(`${pl}：${ps.length?ps.map(p=>p.symbol+p.nameJa).join(' · '):'なし'}`)
+    lines.push(`  ${pl}：${ps.length?ps.map(p=>p.symbol+p.nameJa).join(' · '):'なし'}`)
   })
 
   return lines.join('\n')
