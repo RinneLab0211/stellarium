@@ -97,14 +97,14 @@ input[type=text]:focus{outline:none;border-color:var(--purple)}
 /* Tables */
 .tbl{width:100%;border-collapse:collapse;font-size:.8rem}
 .tbl th{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.12em;color:var(--gold);
-  text-align:left;padding:4px 7px;border-bottom:1px solid var(--bdr);background:#0000002a;white-space:nowrap}
-.tbl td{padding:3px 7px;border-bottom:1px solid #965aff10;vertical-align:middle}
+  text-align:left;padding:3px 8px;border-bottom:1px solid var(--bdr);background:#0000002a;white-space:nowrap}
+.tbl td{padding:2px 8px;border-bottom:1px solid #965aff10;vertical-align:middle}
 .tbl tr:last-child td{border-bottom:none}
 .tbl tr:hover td{background:var(--glow)}
 .tbl tr.ang td{background:#d4af6e09}
-.psym{font-size:1rem;margin-right:4px}
+.psym{font-size:.9rem;margin-right:4px}
 .pname{font-size:.78rem}
-.ssym{font-size:.95rem;margin-right:3px}
+.ssym{font-size:.8rem;margin-right:3px}
 .deg{font-family:'JetBrains Mono',monospace;font-size:.79rem}
 .min{font-family:'JetBrains Mono',monospace;font-size:.73rem;color:var(--textd)}
 .hcell{font-family:'JetBrains Mono',monospace;font-size:.75rem;text-align:center}
@@ -440,17 +440,14 @@ function renderPlanets(h){
     return {s,d,m,ec}
   }
   const rows=h.planets.map(p=>{
-    const el=ELEM[p.signJa]||'',ql=QUAL[p.signJa]||'',pl=POL[p.signJa]||''
-    const ec=ECOL[el]||'#888',qc=QCOL[ql]||'#888',pc=PCOL[pl]||'#888'
+    const el=ELEM[p.signJa]||''
+    const ec=ECOL[el]||'#888'
     const signObj=S[Math.floor(p.longitude/30)]
     return `<tr>
       <td><span class="psym">${p.symbol}</span><span class="pname">${p.nameJa}</span></td>
       <td><span class="ssym">${signObj.symbol}</span><span style="color:${ec}">${p.signJa}</span></td>
       <td><span class="deg">${p.degree}°</span><span class="min">${String(p.minute).padStart(2,'0')}'</span></td>
       <td class="hcell">${p.house}室</td>
-      <td><span class="badge" style="color:${ec};border-color:${ec}44;background:${ec}14">${el}</span></td>
-      <td><span class="badge" style="color:${qc};border-color:${qc}44;background:${qc}14">${ql}</span></td>
-      <td><span class="badge" style="color:${pc};border-color:${pc}44;background:${pc}14">${pl}</span></td>
       <td>${p.retrograde?'<span class="retro">℞</span>':''}</td>
     </tr>`
   }).join('')
@@ -469,14 +466,14 @@ function renderPlanets(h){
       <td colspan="2"><span style="font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold);letter-spacing:.1em">${lbl}</span>
         <span class="ssym" style="margin-left:6px">${s.symbol}</span><span style="color:${ec}">${s.nameJa}</span></td>
       <td><span class="deg">${d}°</span><span class="min">${String(m).padStart(2,'0')}'</span></td>
-      <td class="hcell" colspan="5"><span style="color:var(--textd);font-size:.7rem">${lbl==='ASC'?'上昇点':lbl==='MC'?'中天':lbl==='DES'?'下降点':'天底'}</span></td>
+      <td class="hcell" colspan="2"><span style="color:var(--textd);font-size:.7rem">${lbl==='ASC'?'上昇点':lbl==='MC'?'中天':lbl==='DES'?'下降点':'天底'}</span></td>
     </tr>`
   }).join('')
 
   return `<div class="shdr">天体</div>
-  <table class="tbl"><thead><tr><th>天体</th><th>サイン</th><th>度数</th><th>H</th><th>元素</th><th>区分</th><th>性</th><th>逆行</th></tr></thead>
+  <table class="tbl"><thead><tr><th>天体</th><th>サイン</th><th>度数</th><th>H</th><th>逆行</th></tr></thead>
   <tbody>${rows}
-  <tr><td colspan="8" style="padding:4px 0;border-bottom:1px solid var(--bdr)"></td></tr>
+  <tr><td colspan="5" style="padding:3px 0;border-bottom:1px solid var(--bdr)"></td></tr>
   ${angRows}
   </tbody></table>`
 }
