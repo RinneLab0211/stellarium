@@ -181,6 +181,15 @@ canvas{display:block}
 .copy-btn{background:linear-gradient(135deg,#3a280088,#5a3d0066);border:1px solid var(--gold);border-radius:8px;color:var(--gold2);cursor:pointer;font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.15em;padding:11px 32px;transition:all .25s;white-space:nowrap}
 .copy-btn:hover{border-color:var(--gold2);color:var(--textb);box-shadow:0 0 22px #d4af6e30}
 .copy-note{font-size:.72rem;color:var(--textd);margin-top:10px}
+.cta-wrap{margin-top:32px;padding:28px 24px;border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);
+  background:linear-gradient(160deg,#0c1a1044,#071a1c44);border-radius:12px;text-align:center}
+.cta-title{font-family:'Cinzel',serif;font-size:.95rem;letter-spacing:.12em;color:var(--gold2);margin-bottom:14px;line-height:1.6}
+.cta-body{font-size:.82rem;color:var(--text);line-height:1.85;margin-bottom:20px;opacity:.88}
+.cta-btn{display:inline-block;background:linear-gradient(135deg,#00b050,#06c755);border:none;border-radius:8px;
+  color:#fff;cursor:pointer;font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;letter-spacing:.1em;
+  padding:13px 36px;text-decoration:none;transition:all .25s;white-space:nowrap;
+  box-shadow:0 4px 18px #06c75530}
+.cta-btn:hover{background:linear-gradient(135deg,#00c85e,#09e060);box-shadow:0 6px 26px #06c75550;transform:translateY(-1px)}
 </style>
 </head>
 <body>
@@ -435,6 +444,11 @@ function render(h){
         <div class="copy-wrap">
           <button class="copy-btn" id="copyBtn" onclick="copyChart()">✦ Copy Chart Data</button>
           <div class="copy-note">表示されたデータはご自由にコピー・AI分析にご利用いただけます</div>
+        </div>
+        <div class="cta-wrap">
+          <div class="cta-title">✦ AIで本格鑑定する方法、知りたいですか？</div>
+          <div class="cta-body">ステラリウムのデータをAIに読ませるための<br>占術プロンプト集30個を無料でプレゼントしています。<br>公式LINEに登録してください。</div>
+          <a class="cta-btn" href="https://lin.ee/xxNCM5g" target="_blank" rel="noopener">＞ 無料プロンプト集を受け取る</a>
         </div>
       </div>
     </div>
