@@ -1,4 +1,4 @@
-const { kv } = require('@vercel/kv');
+const readingCache = require('./_store');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -10,14 +10,9 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'session_id is required' });
   }
 
-  try {
-    const reading = await kv.get(`reading:${session_id}`);
-    if (!reading) {
-      return res.status(404).json({ error: '鑑定書がまだ準備できていません' });
-    }
-    return res.status(200).json({ reading });
-  } catch (err) {
-    console.error('KV error:', err);
-    return res.status(500).json({ error: '鑑定書の取得に失敗しました' });
+  const reading = readingCache.get(`reading:${session_id}`);
+  if (!reading) {
+    return res.status(404).json({ error: '鑑定書がまだ準備できていません' });
   }
+  return res.status(200).json({ reading });
 };
