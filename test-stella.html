@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ステラAI テスト — STELLARIUM dev</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://rinnelab0211.github.io/stellarium/astro-engine-bundle.js"></script>
+<style>
+*,::before,::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060410;--surf:#0e0726dd;
+  --bdr:#965aff28;--bdr2:#aa78ff55;
+  --purple:#9b72cf;--purple2:#c4a0ff;
+  --gold:#d4af6e;--gold2:#f0c87a;
+  --text:#e8e0f0;--textd:#b89ed080;--textb:#f5eeff;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;min-height:100%}
+body{overflow-x:hidden}
+.stars{pointer-events:none;position:fixed;inset:0;z-index:0}
+.star{background:#fff;border-radius:50%;position:absolute;animation:tw 3s ease-in-out infinite alternate}
+@keyframes tw{from{opacity:.1;transform:scale(.8)}to{opacity:.7;transform:scale(1.2)}}
+
+.wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 20px 80px}
+
+header{text-align:center;padding:40px 20px 28px;border-bottom:1px solid var(--bdr);margin-bottom:32px}
+.hdr-orn{font-size:.65rem;letter-spacing:.4em;color:var(--gold);opacity:.7;margin-bottom:10px}
+h1{font-family:'Cinzel Decorative',serif;font-size:clamp(1.3rem,3vw,2rem);font-weight:700;
+   letter-spacing:.15em;background:linear-gradient(135deg,#c4a0ff,#f0c87a,#c4a0ff);
+   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+.sub{font-family:'Cinzel',serif;color:var(--purple2);letter-spacing:.2em;font-size:.78rem}
+.dev-badge{display:inline-block;background:#ff6b6b22;border:1px solid #ff6b6b55;
+  border-radius:4px;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;
+  color:#ff9999;padding:3px 10px;margin-top:10px}
+
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;
+  padding:24px 28px;margin-bottom:20px;backdrop-filter:blur(10px)}
+.card h2{font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.18em;
+  color:var(--gold);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--bdr)}
+
+.grid{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:flex-end}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.12em;color:var(--textd)}
+.row{display:flex;align-items:center;gap:6px}
+.sep{color:var(--textd);font-size:.8rem}
+
+input[type=number]{background:#ffffff09;border:1px solid var(--bdr);border-radius:6px;
+  color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.82rem;
+  padding:6px 8px;width:64px;-moz-appearance:textfield;transition:border-color .2s}
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 2px #9b72cf28}
+input[type=number].sm{width:48px}
+input[type=number].md{width:80px}
+input[type=text]{background:#ffffff09;border:1px solid var(--bdr);border-radius:6px;
+  color:var(--text);font-family:'EB Garamond',serif;font-size:.88rem;
+  padding:6px 10px;width:180px;transition:border-color .2s}
+input[type=text]:focus{outline:none;border-color:var(--purple)}
+
+.calc-btn{width:100%;font-family:'Cinzel',serif;font-size:.88rem;letter-spacing:.2em;
+  background:linear-gradient(135deg,#7c4dff,#c4a0ff);color:#fff;border:none;
+  border-radius:8px;padding:16px;cursor:pointer;transition:all .25s;margin-top:8px}
+.calc-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 28px #9b72cf44}
+.calc-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* States */
+#state-idle{display:block}
+#state-calculating{display:none;text-align:center;padding:48px 20px}
+#state-result{display:none}
+.spinner{width:52px;height:52px;border-radius:50%;border:2px solid var(--purple2);
+  border-top-color:transparent;animation:spin 1.2s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner-msg{color:var(--purple2);font-size:1rem;letter-spacing:.08em}
+
+/* Result */
+.result-card{background:var(--surf);border:1px solid var(--bdr);border-radius:16px;
+  padding:36px 42px;line-height:1.95;margin-bottom:28px;backdrop-filter:blur(10px)}
+.reading-text{font-size:1.06rem;color:var(--textb);white-space:pre-wrap;word-break:break-word}
+.back-btn{font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.14em;
+  background:transparent;border:1px solid var(--purple2);color:var(--purple2);
+  padding:10px 28px;border-radius:6px;cursor:pointer;transition:all .2s}
+.back-btn:hover{background:var(--purple2);color:#060410}
+.error-msg{color:#ff9999;background:#ff6b6b11;border:1px solid #ff6b6b33;
+  border-radius:8px;padding:16px 20px;font-size:.9rem;margin-bottom:20px}
+
+/* Preset quick-fill */
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.preset-btn{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.08em;
+  background:#9b72cf18;border:1px solid var(--bdr2);color:var(--purple2);
+  padding:5px 14px;border-radius:4px;cursor:pointer;transition:all .2s}
+.preset-btn:hover{background:#9b72cf33}
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="wrap">
+  <header>
+    <div class="hdr-orn">✦ ✦ ✦</div>
+    <h1>Stella AI テスト</h1>
+    <div class="sub">STELLARIUM — dev only</div>
+    <div class="dev-badge">DEV / TEST PAGE</div>
+  </header>
+
+  <!-- Idle: input form -->
+  <div id="state-idle">
+    <div class="card">
+      <h2>生年月日・時刻</h2>
+      <div class="grid">
+        <div class="field">
+          <label>生年月日</label>
+          <div class="row">
+            <input type="number" id="year" value="1990" min="1900" max="2099" style="width:72px">
+            <span class="sep">/</span>
+            <input type="number" id="month" class="sm" value="5" min="1" max="12">
+            <span class="sep">/</span>
+            <input type="number" id="day" class="sm" value="15" min="1" max="31">
+          </div>
+        </div>
+        <div class="field">
+          <label>生まれた時刻</label>
+          <div class="row">
+            <input type="number" id="hour" class="sm" value="14" min="0" max="23">
+            <span class="sep">:</span>
+            <input type="number" id="minute" class="sm" value="30" min="0" max="59">
+          </div>
+        </div>
+        <div class="field">
+          <label>タイムゾーン (UTC+)</label>
+          <input type="number" id="tz" class="sm" value="9" min="-12" max="14">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>出生地</h2>
+      <div class="presets" id="presets"></div>
+      <div class="grid">
+        <div class="field">
+          <label>都市名（任意）</label>
+          <input type="text" id="city" value="Tokyo" placeholder="例: Tokyo">
+        </div>
+        <div class="field">
+          <label>緯度</label>
+          <input type="number" id="lat" class="md" value="35.6762" step="0.0001">
+        </div>
+        <div class="field">
+          <label>経度</label>
+          <input type="number" id="lon" class="md" value="139.6503" step="0.0001">
+        </div>
+      </div>
+    </div>
+
+    <button class="calc-btn" id="calcBtn" onclick="runCalc()">
+      ✦ ステラに鑑定してもらう
+    </button>
+  </div>
+
+  <!-- Calculating -->
+  <div id="state-calculating">
+    <div class="spinner"></div>
+    <div class="spinner-msg" id="calc-msg">ホロスコープを計算しています…</div>
+  </div>
+
+  <!-- Result -->
+  <div id="state-result">
+    <div style="margin-bottom:20px">
+      <button class="back-btn" onclick="goBack()">← もう一度試す</button>
+    </div>
+    <div id="error-area"></div>
+    <div class="result-card" id="result-card">
+      <div class="reading-text" id="reading-text"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Star generation
+(function(){
+  var c=document.getElementById('stars');
+  for(var i=0;i<100;i++){
+    var s=document.createElement('div'); s.className='star';
+    var sz=Math.random()*2.2+0.5;
+    s.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;animation-delay:'+Math.random()*4+'s;animation-duration:'+(2+Math.random()*3)+'s';
+    c.appendChild(s);
+  }
+})();
+
+// City presets
+var CITIES=[
+  {name:'東京',lat:35.6762,lon:139.6503,tz:9},
+  {name:'大阪',lat:34.6937,lon:135.5023,tz:9},
+  {name:'札幌',lat:43.0642,lon:141.3469,tz:9},
+  {name:'福岡',lat:33.5904,lon:130.4017,tz:9},
+  {name:'那覇',lat:26.2124,lon:127.6809,tz:9},
+  {name:'ニューヨーク',lat:40.7128,lon:-74.0060,tz:-5},
+  {name:'ロンドン',lat:51.5074,lon:-0.1278,tz:0},
+  {name:'パリ',lat:48.8566,lon:2.3522,tz:1},
+  {name:'ソウル',lat:37.5665,lon:126.9780,tz:9},
+  {name:'上海',lat:31.2304,lon:121.4737,tz:8},
+];
+
+var pb=document.getElementById('presets');
+CITIES.forEach(function(c){
+  var b=document.createElement('button');
+  b.className='preset-btn'; b.textContent=c.name;
+  b.onclick=function(){
+    document.getElementById('city').value=c.name;
+    document.getElementById('lat').value=c.lat;
+    document.getElementById('lon').value=c.lon;
+    document.getElementById('tz').value=c.tz;
+  };
+  pb.appendChild(b);
+});
+
+function setState(s){
+  document.getElementById('state-idle').style.display        = s==='idle'        ? 'block':'none';
+  document.getElementById('state-calculating').style.display = s==='calculating' ? 'block':'none';
+  document.getElementById('state-result').style.display      = s==='result'      ? 'block':'none';
+}
+
+function setMsg(msg){ document.getElementById('calc-msg').textContent=msg; }
+
+function goBack(){ setState('idle'); }
+
+async function runCalc(){
+  if(!window.AstroEngine){ alert('エンジン読み込み中です。少し待ってから再度お試しください。'); return; }
+
+  var y  = +document.getElementById('year').value;
+  var mo = +document.getElementById('month').value;
+  var d  = +document.getElementById('day').value;
+  var hh = +document.getElementById('hour').value;
+  var mi = +document.getElementById('minute').value;
+  var tz = +document.getElementById('tz').value;
+  var lat= +document.getElementById('lat').value;
+  var lon= +document.getElementById('lon').value;
+  var city=document.getElementById('city').value || 'Unknown';
+
+  setState('calculating');
+  setMsg('ホロスコープを計算しています…');
+
+  // Yield to paint
+  await new Promise(function(r){setTimeout(r,40);});
+
+  var h;
+  try{
+    h=window.AstroEngine.calcHoroscope({year:y,month:mo,day:d,hour:hh,minute:mi,timezone:tz,latitude:lat,longitude:lon});
+  }catch(e){
+    showError('ホロスコープの計算に失敗しました: '+e.message);
+    return;
+  }
+
+  var pad=function(n){return String(n).padStart(2,'0');};
+  var birthDate=y+'-'+pad(mo)+'-'+pad(d);
+  var birthTime=pad(hh)+':'+pad(mi);
+
+  var asc=h.houses.ascendant;
+  var mc =h.houses.midheaven;
+
+  var payload={
+    birthDate:  birthDate,
+    birthTime:  birthTime,
+    birthPlace: city,
+    planets:    h.planets,
+    houses:     h.houses,
+    aspects:    h.aspects,
+    angles:{
+      asc: asc,
+      mc:  mc,
+      dsc: (asc+180)%360,
+      ic:  (mc +180)%360,
+    }
+  };
+
+  setMsg('ステラが星を読んでいます…（1〜2分かかります）');
+
+  try{
+    var res=await fetch('/api/generate-reading',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    var data=await res.json();
+    if(!res.ok){ showError(data.error||'APIエラーが発生しました（'+res.status+'）'); return; }
+    document.getElementById('reading-text').textContent=data.reading;
+    document.getElementById('error-area').innerHTML='';
+    setState('result');
+  }catch(e){
+    showError('通信エラーが発生しました: '+e.message);
+  }
+}
+
+function showError(msg){
+  setState('result');
+  document.getElementById('error-area').innerHTML='<div class="error-msg">'+msg+'</div>';
+  document.getElementById('reading-text').textContent='';
+  document.getElementById('result-card').style.display='none';
+}
+</script>
+</body>
+</html>
