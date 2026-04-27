@@ -153,14 +153,14 @@ input[type=text]:focus{outline:none;border-color:var(--purple)}
     </div>
 
     <button class="calc-btn" id="calcBtn" onclick="runCalc()">
-      ✦ ステラに鑑定してもらう
+      ✦ ステラに鑑定してもらう（有料鑑定シミュレーション）
     </button>
   </div>
 
   <!-- Calculating -->
   <div id="state-calculating">
     <div class="spinner"></div>
-    <div class="spinner-msg" id="calc-msg">ホロスコープを計算しています…</div>
+    <div class="spinner-msg" id="calc-msg">星を読み解いています...</div>
   </div>
 
   <!-- Result -->
@@ -238,15 +238,24 @@ async function runCalc(){
   var city=document.getElementById('city').value || 'Unknown';
 
   setState('calculating');
-  setMsg('ホロスコープを計算しています…');
+  setMsg('星を読み解いています...');
+  document.getElementById('result-card').style.display='block';
 
-  // Yield to paint
+  console.log('[Stella] 計算開始:', {y,mo,d,hh,mi,tz,lat,lon,city});
+
   await new Promise(function(r){setTimeout(r,40);});
 
   var h;
   try{
     h=window.AstroEngine.calcHoroscope({year:y,month:mo,day:d,hour:hh,minute:mi,timezone:tz,latitude:lat,longitude:lon});
+    console.log('[Stella] ホロスコープ計算完了:', {
+      planets: h.planets.length+'個',
+      aspects: h.aspects.length+'個',
+      asc: h.houses.ascendant,
+      mc:  h.houses.midheaven
+    });
   }catch(e){
+    console.error('[Stella] ホロスコープ計算エラー:', e);
     showError('ホロスコープの計算に失敗しました: '+e.message);
     return;
   }
@@ -254,7 +263,6 @@ async function runCalc(){
   var pad=function(n){return String(n).padStart(2,'0');};
   var birthDate=y+'-'+pad(mo)+'-'+pad(d);
   var birthTime=pad(hh)+':'+pad(mi);
-
   var asc=h.houses.ascendant;
   var mc =h.houses.midheaven;
 
@@ -265,15 +273,11 @@ async function runCalc(){
     planets:    h.planets,
     houses:     h.houses,
     aspects:    h.aspects,
-    angles:{
-      asc: asc,
-      mc:  mc,
-      dsc: (asc+180)%360,
-      ic:  (mc +180)%360,
-    }
+    angles:{ asc:asc, mc:mc, dsc:(asc+180)%360, ic:(mc+180)%360 }
   };
 
-  setMsg('ステラが星を読んでいます…（1〜2分かかります）');
+  console.log('[Stella] APIリクエスト送信: POST /api/generate-reading');
+  setMsg('星を読み解いています...（1〜2分かかります）');
 
   try{
     var res=await fetch('/api/generate-reading',{
@@ -281,12 +285,20 @@ async function runCalc(){
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify(payload)
     });
+    console.log('[Stella] APIレスポンス:', res.status, res.statusText);
+
     var data=await res.json();
-    if(!res.ok){ showError(data.error||'APIエラーが発生しました（'+res.status+'）'); return; }
+    if(!res.ok){
+      console.error('[Stella] APIエラー:', data);
+      showError(data.error||'APIエラーが発生しました（'+res.status+'）');
+      return;
+    }
+    console.log('[Stella] 鑑定書受信完了。文字数:', data.reading.length);
     document.getElementById('reading-text').textContent=data.reading;
     document.getElementById('error-area').innerHTML='';
     setState('result');
   }catch(e){
+    console.error('[Stella] 通信エラー:', e);
     showError('通信エラーが発生しました: '+e.message);
   }
 }
