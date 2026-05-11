@@ -409,6 +409,17 @@
   .category{
     margin-top:72px;
   }
+  .cat-note{
+    margin:0 0 20px;
+    padding:22px 26px;
+    background:linear-gradient(180deg, rgba(231,194,113,.06), rgba(178,139,255,.05));
+    border:1px solid rgba(231,194,113,.28);
+    border-left:3px solid var(--gold);
+    border-radius:3px;
+    color:#ece8ff;
+    font-size:14.5px; line-height:1.95;
+    letter-spacing:.02em;
+  }
   .cat-head{
     display:flex; align-items:baseline; gap:20px;
     margin-bottom:28px;
@@ -460,6 +471,7 @@
     flex:1; min-width:0;
     font-size:14px; line-height:1.9; color:#ece8ff;
     padding-right:44px;
+    white-space:pre-line;
   }
   .prompt .copy{
     position:absolute; right:14px; top:14px;
@@ -808,7 +820,7 @@
         <div class="cta-hero">
           <div class="glyph">✦ GO DEEPER ✦</div>
           <h2>AIの答えを読んで、<br><em>もっと深く知りたくなったら</em></h2>
-          <p>AIは傾向を教えてくれます。僕もAIに相談することがある。便利だと思っています。でも、言葉の裏にあるものを感じながら、その瞬間のあなただけのために読んでいく。これは、人間にしかできないことです。</p>
+          <p>AIは便利です。僕もAIに相談しています。でも、その瞬間のあなたの状況や想いを引き出し、効果的で具体的な行動アドバイスを行うことはまだ、難しいでしょう。もし人間にしか出来ないアドバイスが欲しいと思ったら、7つの占術をマスターするリンネまでご相談下さい。</p>
         </div>
 
         <!-- ② お客様の声 -->
@@ -912,13 +924,41 @@
       <circle cx="12" cy="12" r="9"/>
       <path d="M12 3v18M3 12h18M5 5l14 14M19 5L5 19"/>
     </symbol>
+    <symbol id="g-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3L2 21h20L12 3z"/>
+      <path d="M12 10v5M12 18.2v.3"/>
+    </symbol>
+    <symbol id="g-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 7v5l3.5 2"/>
+    </symbol>
+    <symbol id="g-pair" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="8.5" cy="11" r="4.5"/>
+      <circle cx="15.5" cy="13" r="4.5"/>
+    </symbol>
   </defs>
 </svg>
 
 <script>
   const CATEGORIES = [
     {
-      kicker:"CATEGORY 01 · LOVE & MARRIAGE",
+      kicker:"CATEGORY 01 · NOTE FOR AI READING",
+      title:"AI鑑定の注意点",
+      glyph:"g-warning",
+      note:"AIは長く会話をすると、最初に送信したホロスコープデータを参照せず、間違った情報を出す場合があります。長く会話する際は、適宜ホロスコープデータを再度コピペしてください。（目安：10〜15往復程度）",
+      prompts:[],
+    },
+    {
+      kicker:"CATEGORY 02 · IF BIRTH TIME UNKNOWN",
+      title:"出生時間不明の場合",
+      glyph:"g-clock",
+      note:"以下をコピペ、またはホロスコープデータと共にチャットに入力してください。",
+      prompts:[
+        "私は出生時間が不明なので、ハウスは使用せずに鑑定してください。",
+      ],
+    },
+    {
+      kicker:"CATEGORY 03 · LOVE & MARRIAGE",
       title:"恋愛・結婚",
       glyph:"g-heart",
       prompts:[
@@ -926,45 +966,45 @@
         "私が恋愛で繰り返しやすい課題を教えてください。",
         "私に合うパートナーの特徴を教えてください。",
         "私の金星と火星から、愛情表現のクセを教えてください。",
-        "私の7ハウスから、結婚に向いている相手の傾向を教えてください。",
+        "私の7ハウス（または金星・火星）から、結婚に向いている相手の傾向を教えてください。",
       ],
     },
     {
-      kicker:"CATEGORY 02 · WORK & CAREER",
+      kicker:"CATEGORY 04 · WORK & CAREER",
       title:"仕事・キャリア",
       glyph:"g-work",
       prompts:[
         "私に向いている仕事のスタイルの傾向を教えてください。",
         "私が職場で躓きやすいパターンを教えてください。",
-        "私の10ハウスから、社会的な役割の傾向を教えてください。",
+        "私の10ハウス（または太陽・土星）から、社会的な役割の傾向を教えてください。",
         "私が独立・副業に向いているかどうかの傾向を教えてください。",
         "私の土星から、仕事における課題のテーマを教えてください。",
       ],
     },
     {
-      kicker:"CATEGORY 03 · MONEY & ABUNDANCE",
+      kicker:"CATEGORY 05 · MONEY & ABUNDANCE",
       title:"お金・豊かさ",
       glyph:"g-money",
       prompts:[
         "私のお金の使い方のクセを教えてください。",
-        "私の2ハウスから、お金との関係性の傾向を教えてください。",
+        "私の2ハウス（または金星・木星）から、お金との関係性の傾向を教えてください。",
         "私が豊かさを受け取りにくいパターンを教えてください。",
         "私の木星から、豊かさが流れやすい分野を教えてください。",
         "私に向いている収入の得方の傾向を教えてください。",
       ],
     },
     {
-      kicker:"CATEGORY 04 · HEALTH & BODY",
+      kicker:"CATEGORY 06 · HEALTH & BODY",
       title:"健康・体",
       glyph:"g-health",
       prompts:[
         "私が疲れやすいシチュエーションの傾向を教えてください。",
-        "私の6ハウスから、健康面で注意すべきパターンを教えてください。",
+        "私の6ハウス（または火星・土星）から、健康面で注意すべきパターンを教えてください。",
         "私がストレスを感じやすい状況の傾向を教えてください。",
       ],
     },
     {
-      kicker:"CATEGORY 05 · RELATIONSHIPS",
+      kicker:"CATEGORY 07 · RELATIONSHIPS",
       title:"人間関係",
       glyph:"g-people",
       prompts:[
@@ -976,24 +1016,36 @@
       ],
     },
     {
-      kicker:"CATEGORY 06 · MISSION & SPIRIT",
+      kicker:"CATEGORY 08 · MISSION & SPIRIT",
       title:"使命・スピリチュアル",
       glyph:"g-spirit",
       prompts:[
         "私の太陽から、人生のテーマの傾向を教えてください。",
         "私が繰り返しやすい試練のパターンを教えてください。",
         "私がまだ活かしきれていない才能の傾向を教えてください。",
-        "私の12ハウスから、無意識のパターンを教えてください。",
+        "私の12ハウス（または海王星・月）から、無意識のパターンを教えてください。",
         "私が自然と人に与えている影響の傾向を教えてください。",
       ],
     },
     {
-      kicker:"CATEGORY 07 · OVERALL",
+      kicker:"CATEGORY 09 · OVERALL",
       title:"総合",
       glyph:"g-total",
       prompts:[
         "このホロスコープから、私の強みと課題のテーマを教えてください。",
         "このホロスコープ全体から、私という人間の傾向をまとめてください。",
+      ],
+    },
+    {
+      kicker:"CATEGORY 10 · COMPATIBILITY",
+      title:"相性",
+      glyph:"g-pair",
+      note:"相性占いを行う際は、まずNo32の相性用プロンプトと質問プロンプトを組み合わせてAIに伝えてください。お相手の方の名前は、状況や家族・子供・ビジネスパートナーの名前に書き換えて構いません。どちらか、あるいは両方の出生時間が不明な場合は、名前の横に「出生時間不明」と記載してください。",
+      prompts:[
+        "相性占いを行います。\n\n私のホロスコープ\nここにデータを貼る↓\n\n\n彼のホロスコープ\nここにデータを貼る↓\n\n\n質問プロンプト↓",
+        "コンパリゾンの手法で、二人の「太陽」と「月」の配置を比較してください。ハウスがわかる場合はその重なりを、不明な場合は星座の組み合わせを優先し、生活リズムや基本的な価値観が一致しているかどうかを解説してください。",
+        "コンパリゾンの手法で、二人の「金星」と「火星」をみてください。ハウス（判明している場合のみ1・5・7・8H）や星座の共通点から、対人関係における惹きつけ合う力の強さと、好みの合致度を分析してください。",
+        "コンパリゾンの手法で、二人の「水星」をみてください。思考のクセや情報の伝え方が合うか、どこですれ違いが起きやすいかを確認し、円滑に意思疎通を図るための具体的な注意点を出してください。",
       ],
     },
   ];
@@ -1027,6 +1079,12 @@
     const sec = document.createElement("section");
     sec.className = "category";
     sec.id = slug(catIdx);
+
+    let noteHtml = "";
+    if (cat.note){
+      noteHtml = `<p class="cat-note">${cat.note}</p>`;
+    }
+
     const grid = document.createElement("div");
     grid.className = "prompt-grid";
     for (const p of cat.prompts){
@@ -1050,6 +1108,9 @@
       grid.appendChild(card);
       idx++;
     }
+    const countLabel = cat.prompts.length>0
+      ? pad(cat.prompts.length) + (cat.prompts.length===1?" PROMPT":" PROMPTS")
+      : "NOTE";
     sec.innerHTML = `
       <div class="cat-head">
         <div class="cat-sign"><svg><use href="#${cat.glyph}"/></svg></div>
@@ -1057,10 +1118,11 @@
           <div class="cat-kicker">${cat.kicker}</div>
           <h3 class="cat-title">${cat.title}</h3>
         </div>
-        <div class="cat-count">${pad(cat.prompts.length)} PROMPTS</div>
+        <div class="cat-count">${countLabel}</div>
       </div>
+      ${noteHtml}
     `;
-    sec.appendChild(grid);
+    if (cat.prompts.length>0) sec.appendChild(grid);
     root.appendChild(sec);
   }
 
