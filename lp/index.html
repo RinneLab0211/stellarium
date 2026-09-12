@@ -9,178 +9,26 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b0b12;--surface:#14141e;--surface2:#191925;--gold:#d1ae6d;--gold2:#f0d39a;--text:#f0ece6;--muted:#bcb6aa;--line:#34323a;--teal:#8fd7d2;--max:960px}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(900px 600px at 50% -8%,rgba(209,174,109,.10),transparent 60%),linear-gradient(#0b0b12,#0e0e16 40%,#0b0b12);color:var(--text);font-family:'Noto Serif JP',serif;line-height:1.9;-webkit-font-smoothing:antialiased}a{color:inherit}.wrap{max-width:var(--max);margin:auto;padding:0 24px}.narrow{max-width:740px;margin:auto}.eyebrow{font-family:'Cormorant Garamond',serif;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);font-size:13px}.gold{color:var(--gold2)}.muted{color:var(--muted)}section{padding:96px 0;border-top:1px solid rgba(255,255,255,.035)}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(36px,7vw,70px);line-height:1.28;font-weight:500;letter-spacing:.01em;margin:20px 0 24px}h2{font-size:clamp(27px,4.6vw,42px);line-height:1.5;font-weight:500;margin:14px 0 28px}h3{font-size:20px;line-height:1.55}.lead{font-size:clamp(17px,2.5vw,21px);line-height:2;color:#e5dfd6}.hero{text-align:center;padding:80px 0 92px;border-top:0}.logo{font-family:'Cormorant Garamond',serif;color:var(--gold);letter-spacing:.48em;font-size:16px;margin-left:.48em}.hero .subline{font-size:16px;color:var(--muted);margin:0 auto 30px;max-width:690px}.hero-claim{font-size:clamp(20px,4vw,30px);line-height:1.7;color:var(--gold2);margin:8px 0 24px}.price-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:30px 0 18px}.pill{border:1px solid rgba(209,174,109,.38);border-radius:999px;padding:8px 15px;font-size:13px;color:#e9dfca;background:rgba(209,174,109,.06)}.cta{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--gold);color:#0a0a0e;text-decoration:none;padding:18px 34px;border-radius:5px;font-weight:700;font-size:16px;border:1px solid var(--gold);transition:.2s}.cta:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(209,174,109,.18)}.subcta{display:block;width:max-content;margin:16px auto 0;color:var(--gold2);font-size:14px;text-decoration:none;border-bottom:1px solid rgba(209,174,109,.4)}.micro{font-size:12px;color:var(--muted);margin-top:14px}.hero-shot{max-width:720px;margin:50px auto 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.45)}.hero-shot img{display:block;width:100%;height:auto}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:42px 0 10px}.flow-card,.card{background:rgba(20,20,30,.8);border:1px solid var(--line);border-radius:8px;padding:22px}.flow-card span{font-family:'Cormorant Garamond',serif;color:var(--gold);letter-spacing:.15em;font-size:13px}.flow-card strong{display:block;margin-top:8px;font-size:15px}.truth{border:1px solid rgba(209,174,109,.35);background:linear-gradient(135deg,rgba(209,174,109,.07),rgba(20,20,30,.82));border-radius:9px;padding:34px;margin:34px 0}.truth strong{color:var(--gold2)}.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:38px}.compare .card{padding:28px}.compare .card.primary{border-color:rgba(209,174,109,.55);background:rgba(209,174,109,.06)}ul.clean{list-style:none;padding:0;margin:18px 0 0}ul.clean li{padding:11px 0;border-bottom:1px solid rgba(255,255,255,.06);color:var(--muted)}ul.clean li:before{content:'✓';color:var(--gold);margin-right:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:36px}.feature{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:25px}.feature b{display:block;color:var(--gold2);margin-bottom:9px}.feature p{margin:0;color:var(--muted);font-size:14px}.section-head{text-align:center;max-width:760px;margin-left:auto;margin-right:auto}.section-head p{color:var(--muted);font-size:15px}.usecases{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:30px}.usecase{border:1px solid var(--line);background:rgba(20,20,30,.65);padding:19px 20px;border-radius:7px}.proof{border-left:2px solid var(--gold);padding:6px 0 6px 24px;margin:30px 0;color:#e9e2d8}.voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.voice{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:28px}.voice blockquote{margin:0 0 18px;font-size:18px;line-height:1.9}.voice small{color:var(--muted)}.offer{border:1px solid var(--gold);border-radius:10px;background:linear-gradient(145deg,rgba(209,174,109,.08),rgba(14,14,22,.95));padding:38px;text-align:center}.offer .price{font-family:'Cormorant Garamond',serif;font-size:clamp(54px,10vw,80px);color:var(--gold2);line-height:1}.offer .buyout{margin:10px 0 26px}.offer-list{max-width:650px;margin:26px auto;text-align:left;display:grid;grid-template-columns:1fr 1fr;gap:9px 18px}.offer-list div{border-bottom:1px solid rgba(255,255,255,.07);padding:9px 0;font-size:14px}.offer-list div:before{content:'✓';color:var(--gold);margin-right:8px}.faq{border-bottom:1px solid var(--line)}details{border-top:1px solid var(--line);padding:0}summary{cursor:pointer;padding:21px 4px;font-weight:600}details p{color:var(--muted);padding:0 4px 20px;margin:0}.profile{display:grid;grid-template-columns:1fr;gap:20px}.footer{text-align:center;padding:46px 20px 60px;color:var(--muted);font-size:12px}.footer a{color:var(--muted);margin:0 10px}.sticky{display:none}@media(max-width:760px){section{padding:74px 0}.hero{padding-top:58px}.flow{grid-template-columns:1fr 1fr}.grid3,.compare,.voice-grid,.usecases,.offer-list{grid-template-columns:1fr}.truth,.offer{padding:26px 21px}.sticky{display:block;position:fixed;left:12px;right:12px;bottom:12px;z-index:50}.sticky .cta{width:100%;box-shadow:0 10px 35px rgba(0,0,0,.45)}body{padding-bottom:76px}}
+:root{--bg:#0b0b12;--surface:#14141e;--surface2:#191925;--gold:#d1ae6d;--gold2:#f0d39a;--text:#f0ece6;--muted:#bcb6aa;--line:#34323a;--teal:#8fd7d2;--max:960px}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(900px 600px at 50% -8%,rgba(209,174,109,.10),transparent 60%),linear-gradient(#0b0b12,#0e0e16 40%,#0b0b12);color:var(--text);font-family:'Noto Serif JP',serif;line-height:1.9;-webkit-font-smoothing:antialiased}a{color:inherit}.wrap{max-width:var(--max);margin:auto;padding:0 24px}.narrow{max-width:740px;margin:auto}.eyebrow{font-family:'Cormorant Garamond',serif;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);font-size:13px}.gold{color:var(--gold2)}.muted{color:var(--muted)}section{padding:96px 0;border-top:1px solid rgba(255,255,255,.035)}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(36px,7vw,70px);line-height:1.28;font-weight:500;letter-spacing:.01em;margin:20px 0 24px}h2{font-size:clamp(27px,4.6vw,42px);line-height:1.5;font-weight:500;margin:14px 0 28px}h3{font-size:20px;line-height:1.55}.lead{font-size:clamp(17px,2.5vw,21px);line-height:2;color:#e5dfd6}.hero{text-align:center;padding:80px 0 92px;border-top:0}.logo{font-family:'Cormorant Garamond',serif;color:var(--gold);letter-spacing:.48em;font-size:16px;margin-left:.48em}.hero .subline{font-size:16px;color:var(--muted);margin:0 auto 30px;max-width:690px}.hero-claim{font-size:clamp(20px,4vw,30px);line-height:1.7;color:var(--gold2);margin:8px 0 24px}.price-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:30px 0 18px}.pill{border:1px solid rgba(209,174,109,.38);border-radius:999px;padding:8px 15px;font-size:13px;color:#e9dfca;background:rgba(209,174,109,.06)}.cta{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--gold);color:#0a0a0e;text-decoration:none;padding:18px 34px;border-radius:5px;font-weight:700;font-size:16px;border:1px solid var(--gold);transition:.2s}.cta:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(209,174,109,.18)}.subcta{display:block;width:max-content;margin:16px auto 0;color:var(--gold2);font-size:14px;text-decoration:none;border-bottom:1px solid rgba(209,174,109,.4)}.micro{font-size:12px;color:var(--muted);margin-top:14px}.hero-shot{max-width:720px;margin:50px auto 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.45)}.hero-shot img{display:block;width:100%;height:auto}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:42px 0 10px}.flow-card,.card{background:rgba(20,20,30,.8);border:1px solid var(--line);border-radius:8px;padding:22px}.flow-card span{font-family:'Cormorant Garamond',serif;color:var(--gold);letter-spacing:.15em;font-size:13px}.flow-card strong{display:block;margin-top:8px;font-size:15px}.truth{border:1px solid rgba(209,174,109,.35);background:linear-gradient(135deg,rgba(209,174,109,.07),rgba(20,20,30,.82));border-radius:9px;padding:34px;margin:34px 0}.truth strong{color:var(--gold2)}.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:38px}.compare .card{padding:28px}.compare .card.primary{border-color:rgba(209,174,109,.55);background:rgba(209,174,109,.06)}ul.clean{list-style:none;padding:0;margin:18px 0 0}ul.clean li{padding:11px 0;border-bottom:1px solid rgba(255,255,255,.06);color:var(--muted)}ul.clean li:before{content:'✓';color:var(--gold);margin-right:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:36px}.feature{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:25px}.feature b{display:block;color:var(--gold2);margin-bottom:9px}.feature p{margin:0;color:var(--muted);font-size:14px}.section-head{text-align:center;max-width:760px;margin-left:auto;margin-right:auto}.section-head p{color:var(--muted);font-size:15px}.usecases{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:30px}.usecase{border:1px solid var(--line);background:rgba(20,20,30,.65);padding:19px 20px;border-radius:7px}.proof{border-left:2px solid var(--gold);padding:6px 0 6px 24px;margin:30px 0;color:#e9e2d8}.voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.voice{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:28px}.voice blockquote{margin:0 0 18px;font-size:18px;line-height:1.9}.voice small{color:var(--muted)}.offer{border:1px solid var(--gold);border-radius:10px;background:linear-gradient(145deg,rgba(209,174,109,.08),rgba(14,14,22,.95));padding:38px;text-align:center}.offer .price{font-family:'Cormorant Garamond',serif;font-size:clamp(54px,10vw,80px);color:var(--gold2);line-height:1}.offer .buyout{margin:10px 0 26px}.offer-list{max-width:650px;margin:26px auto;text-align:left;display:grid;grid-template-columns:1fr 1fr;gap:9px 18px}.offer-list div{border-bottom:1px solid rgba(255,255,255,.07);padding:9px 0;font-size:14px}.offer-list div:before{content:'✓';color:var(--gold);margin-right:8px}.faq{border-bottom:1px solid var(--line)}details{border-top:1px solid var(--line);padding:0}summary{cursor:pointer;padding:21px 4px;font-weight:600}details p{color:var(--muted);padding:0 4px 20px;margin:0}.profile{display:grid;grid-template-columns:1fr;gap:20px}.footer{text-align:center;padding:46px 20px 60px;color:var(--muted);font-size:12px}.footer a{color:var(--muted);margin:0 10px}.mobile-only{display:none}.sticky{display:none}@media(max-width:760px){section{padding:68px 0}.wrap{padding:0 20px}.hero{padding:52px 0 72px}.hero h1{font-size:clamp(31px,8.8vw,40px);line-height:1.38}.hero-claim{font-size:19px;line-height:1.75}.hero .subline{font-size:14px;line-height:2}.flow{grid-template-columns:1fr 1fr;gap:10px}.flow-card{padding:18px 10px}.flow-card strong{font-size:14px;line-height:1.65}.grid3,.compare,.voice-grid,.usecases,.offer-list{grid-template-columns:1fr}.truth,.offer{padding:26px 21px}h2{font-size:clamp(25px,7.1vw,31px);line-height:1.62}.section-head p{line-height:1.95}.mobile-only{display:block}.desktop-only{display:none}.keep{white-space:nowrap}.sticky{display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:50}.sticky.show{display:block}.sticky .cta{width:100%;padding:16px 14px;font-size:14px;box-shadow:0 10px 35px rgba(0,0,0,.45)}body{padding-bottom:92px}.hero .cta{margin-bottom:18px}.hero .subcta{margin-top:18px}.footer a{display:inline-block;margin:5px 8px}}
 </style>
 </head>
 <body>
-<section class="hero">
-<div class="wrap">
-<div class="logo">STELLARIUM</div>
-<div class="eyebrow" style="margin-top:25px">AI-READY HOROSCOPE</div>
-<h1>ホロスコープ全部を、<br><span class="gold">ボタンひとつでAIへ。</span></h1>
-<p class="hero-claim">生年月日を入れる。星を出す。コピーする。<br>あとは、いつものAIに貼るだけ。</p>
-<p class="subline">STELLARIUMは、ネイタル・相性・トランジット・三重円のチャート情報を、AIが読めるテキストとしてまとめてコピーできるAI連携型ホロスコープツールです。ChatGPT、Claude、Geminiなど、好きなAIで使えます。</p>
-<div class="price-row"><span class="pill">¥14,980（税込）</span><span class="pill">買い切り</span><span class="pill">登録不要</span></div>
-<a class="cta" href="#purchase">STELLARIUMを手に入れる →</a>
-<a class="subcta" href="https://stellarium.vercel.app/" target="_blank" rel="noopener">まず無料版を試す</a>
-<p class="micro">購入後すぐ利用可能 ／ 無料AIでも利用可能 ／ PC・スマホ対応</p>
-<div class="flow">
-<div class="flow-card"><span>01</span><strong>生年月日を入力</strong></div>
-<div class="flow-card"><span>02</span><strong>チャートを作成</strong></div>
-<div class="flow-card"><span>03</span><strong>ボタンひとつでコピー</strong></div>
-<div class="flow-card"><span>04</span><strong>好きなAIへ貼る</strong></div>
-</div>
-<figure class="hero-shot"><img src="https://stellarium-lp-vercel-r1set1w5y-rinnes-projects-1a4f2389.vercel.app/lp-assets/stellarium-natal-wheel.png" alt="STELLARIUMのホロスコープ画面"></figure>
-</div>
-</section>
-<section>
-<div class="wrap narrow" style="text-align:center">
-<div class="eyebrow">60-SECOND DEMO</div>
-<h2>実際の操作は、<span class="gold">これだけ。</span></h2>
-<p class="muted">生年月日を入力 → チャート作成 → AI用データをコピー。スマホでも使えます。</p>
-<div style="max-width:360px;margin:34px auto 0;aspect-ratio:9/16;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#000;box-shadow:0 18px 60px rgba(0,0,0,.5)"><iframe src="https://www.youtube.com/embed/ACaIGdtETig?rel=0&modestbranding=1&playsinline=1" title="STELLARIUM デモ" style="width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-</div>
-</section>
-<section>
-<div class="wrap narrow">
-<div class="eyebrow">WHY STELLARIUM</div>
-<h2>AIはもう、占星術をかなり読めます。<br><span class="gold">だからこそ「何を渡すか」が重要です。</span></h2>
-<div class="truth">
-<p>生年月日だけをAIに伝えても、かなり詳しい星読みが返ってくる時代になりました。</p>
-<p>STELLARIUMの価値は、<strong>「AIには占星術ができないから」ではありません。</strong></p>
-<p>AI任せの計算ではなく、STELLARIUMで確定したチャート情報を、毎回同じ形式で、そのままAIへ渡せること。さらに、12年間の実践から作った「読み方のルール」まで一緒に渡せることです。</p>
-</div>
-<p class="lead">計算はSTELLARIUM。<br>解釈は、あなたが選んだAI。<br><span class="gold">AIを変えても、同じ星のデータから始められます。</span></p>
-</div>
-</section>
-<section>
-<div class="wrap">
-<div class="section-head"><div class="eyebrow">THE DIFFERENCE</div><h2>ホロスコープを見るソフトから、<br>ホロスコープを<span class="gold">使う</span>ソフトへ。</h2><p>従来のホロスコープソフトは、チャートを表示して読むためのもの。STELLARIUMは、そのチャート情報をAIとの対話に持ち出すところまでを一つの操作にします。</p></div>
-<div class="compare">
-<div class="card"><h3>従来の使い方</h3><ul class="clean"><li>チャートを作る</li><li>天体・ハウス・アスペクト表を見る</li><li>必要な情報を拾う</li><li>自分で文章にしてAIへ渡す</li><li>質問ごとにまた整える</li></ul></div>
-<div class="card primary"><h3 class="gold">STELLARIUM</h3><ul class="clean"><li>チャートを作る</li><li>AI用データをワンタップコピー</li><li>質問テーマを選ぶ</li><li>読み方のルールごとコピー</li><li>好きなAIへ貼って相談する</li></ul></div>
-</div>
-</div>
-</section>
-<section>
-<div class="wrap">
-<div class="section-head"><div class="eyebrow">THREE VALUES</div><h2>STELLARIUMがしているのは、<br>ただの「AI占い」ではありません。</h2></div>
-<div class="grid3">
-<div class="feature"><b>01｜正確なチャートを固定</b><p>天体・サイン・ハウス・主要アスペクトなどをSTELLARIUM側で計算。AIごとの計算結果に依存せず、同じデータを使えます。</p></div>
-<div class="feature"><b>02｜AI用テキストに一発変換</b><p>チャートを眺めながら情報を書き写す必要はありません。必要な情報を、AIが読める形でまとめてコピーします。</p></div>
-<div class="feature"><b>03｜12年間の「読み方」も渡す</b><p>単なる星の一覧ではなく、データ優先・勝手な補完をしない等のルールと、実践で磨いた読み方をAIへ渡せます。</p></div>
-</div>
-</div>
-</section>
-<section>
-<div class="wrap">
-<div class="section-head"><div class="eyebrow">USE YOUR AI</div><h2>AIサービスに、<span class="gold">閉じ込められない。</span></h2><p>専用AIの中だけで完結するサービスではありません。STELLARIUMはチャートと読み方を「持ち出せる形」にします。</p></div>
-<div class="grid3">
-<div class="feature"><b>ChatGPT</b><p>普段の会話の延長で、仕事・恋愛・才能・人間関係を深掘り。</p></div>
-<div class="feature"><b>Claude</b><p>長い文脈や文章的な読みを含め、同じチャートデータから自由に相談。</p></div>
-<div class="feature"><b>Geminiほか</b><p>テキストを貼れるAIなら利用可能。AIが進化すれば、その進化をそのまま使えます。</p></div>
-</div>
-<p class="proof">「どのAIが正しいか」を選ぶのではなく、<strong>どのAIにも同じ確定データを渡せる</strong>。それがSTELLARIUMの設計です。</p>
-</div>
-</section>
-<section>
-<div class="wrap">
-<div class="section-head"><div class="eyebrow">90+ THEMES</div><h2>「何を聞けばいい？」まで、<br>STELLARIUMに入っています。</h2><p>チャートを出したあとに迷わないよう、90テーマ以上の鑑定メニューを用意しています。</p></div>
-<div class="usecases">
-<div class="usecase">「この人と付き合って大丈夫？」を相性図から見る</div>
-<div class="usecase">「自分の才能は何？」を出生図から整理する</div>
-<div class="usecase">「転職するなら今？」を現在の星と重ねる</div>
-<div class="usecase">「なぜ同じ恋愛を繰り返す？」を出生図から読む</div>
-<div class="usecase">「子どもにはどう伝えれば届く？」を親子の星から考える</div>
-<div class="usecase">「今は動く時期？待つ時期？」を三重円で考える</div>
-</div>
-</div>
-</section>
-<section>
-<div class="wrap">
-<div class="section-head"><div class="eyebrow">PRODUCT</div><h2>製品版で使えるもの</h2></div>
-<div class="grid3">
-<div class="feature"><b>ネイタル</b><p>性格、才能、仕事、恋愛、人生テーマ。</p></div>
-<div class="feature"><b>シナストリー</b><p>恋愛、親子、友人、仕事仲間、上司・部下など二人の関係。</p></div>
-<div class="feature"><b>トランジット</b><p>今月、今年、転機、仕事・恋愛の現在地。</p></div>
-<div class="feature"><b>三重円</b><p>出生図と現在・進行の星を重ね、人生の流れを見る。</p></div>
-<div class="feature"><b>90テーマ以上</b><p>恋愛・仕事・お金・才能・相性・人間関係・時期読み。</p></div>
-<div class="feature"><b>購入者向けガイド</b><p>AIへの渡し方、回答の見方、個人情報やハルシネーションへの注意。</p></div>
-</div>
-</div>
-</section>
-<section>
-<div class="wrap narrow">
-<div class="truth">
-<div class="eyebrow">REAL USE CASE</div>
-<h2 style="margin-top:12px">占いに詳しくなくても、<br><span class="gold">星を創作や自己理解に使える。</span></h2>
-<p>AI動画クリエイターの方が、STELLARIUMのチャートデータをClaudeへ渡し、「自分が本当に作りたいもの」を掘り下げる過程をnoteで公開しています。</p>
-<a class="subcta" style="margin-left:0" href="https://note.com/ponzponz15/n/n97101dfc9d4a" target="_blank" rel="noopener">実際の使用例を読む →</a>
-</div>
-</div>
-</section>
-<section>
-<div class="wrap">
-<div class="section-head"><div class="eyebrow">VOICE</div><h2>実際に使った方の声</h2></div>
-<div class="voice-grid">
-<div class="voice"><blockquote>「いままで占いとか信じなかったけど、自分が生きてきたのは星の通りだったんだと腑に落ちた。」</blockquote><small>AI動画クリエイター／講師の方より</small></div>
-<div class="voice"><blockquote>「どのAIに聞いても同じ答えが返ってきたので、私も生きる希望が湧いてきました。」</blockquote><small>AI初心者向けサービス提供者の方より</small></div>
-</div>
-<p class="micro" style="text-align:center">※個人の感想です。鑑定結果や効果を保証するものではありません。</p>
-</div>
-</section>
-<section>
-<div class="wrap narrow">
-<div class="eyebrow">WHY I MADE THIS</div>
-<h2>12年間の占星術を、<br><span class="gold">「自分で使える道具」にしたかった。</span></h2>
-<p>私は占星術を学び、実際の鑑定現場で人の人生を読んできました。一方で、自分自身が占いに答えを求め続けた経験もあります。</p>
-<p>だから作りたかったのは、誰かに答えを預け続けるためのサービスではありません。自分の星を、自分の手元で何度でも考えるための道具です。</p>
-<p>AIが進化した今なら、専門知識を何年も学ばなくても、正確なチャートと読み方さえ渡せば、深い対話ができる。STELLARIUMは、そのための橋です。</p>
-</div>
-</section>
-<section id="purchase">
-<div class="wrap">
-<div class="offer">
-<div class="eyebrow">PRODUCT EDITION</div>
-<h2>STELLARIUM 製品版</h2>
-<div class="price">¥14,980</div><div class="buyout">税込 ／ 買い切り</div>
-<div class="offer-list"><div>ネイタルチャート</div><div>シナストリー</div><div>トランジット</div><div>三重円</div><div>AI用ワンタップコピー</div><div>90テーマ以上の質問</div><div>12年間の読解ルール</div><div>AI活用ガイド</div><div>購入者向けGPT</div><div>無償アップデート</div></div>
-<p class="muted">月額課金ではありません。一度購入すれば、ChatGPT・Claude・Geminiなど、好きなAIと組み合わせて使えます。</p>
-<a class="cta" href="https://buy.stripe.com/aFa8wQ2oQ7OV3vvcid97G08" target="_blank" rel="noopener">STELLARIUMを購入する →</a>
-<a class="subcta" href="https://stellarium.vercel.app/" target="_blank" rel="noopener">購入前に無料版を体験する</a>
-<p class="micro">クレジット決済後、メールアドレス宛に製品URL等をご案内します。銀行振込は公式LINEからお問い合わせください。</p>
-</div>
-</div>
-</section>
-<section>
-<div class="wrap narrow">
-<div class="section-head"><div class="eyebrow">PRIVACY</div><h2>出生情報を扱うから、<br>保存しない設計。</h2></div>
-<div class="grid3"><div class="feature"><b>ブラウザ内で処理</b><p>基本的なチャート処理はブラウザ内で行います。</p></div><div class="feature"><b>登録不要</b><p>STELLARIUM利用のための氏名・メール登録は不要です。</p></div><div class="feature"><b>相談内容を保存しない</b><p>STELLARIUM側で相談内容を保存しません。AIへ貼った情報は各AIサービスの規約に従います。</p></div></div>
-</div>
-</section>
-<section>
-<div class="wrap narrow">
-<div class="section-head"><div class="eyebrow">FAQ</div><h2>よくある質問</h2></div>
-<div class="faq">
-<details><summary>占星術が分からなくても使えますか？</summary><p>使えます。チャートの計算とAI用データの整理はSTELLARIUMが行います。質問テーマを選び、コピーしてAIへ貼るだけです。</p></details>
-<details><summary>生年月日だけAIに伝えるのと何が違いますか？</summary><p>生年月日だけでもAIが詳しく読む場合はあります。ただし、計算方法や採用されたハウス・アスペクト等がAI任せになります。STELLARIUMでは先にチャートデータを固定してから、AIへ解釈だけを任せられます。</p></details>
-<details><summary>どのAIで使えますか？</summary><p>ChatGPT・Claude・Geminiなど、テキストを貼り付けられるAIで利用できます。特定AIへの加入を必須にしていません。</p></details>
-<details><summary>無料AIでも使えますか？</summary><p>使えます。より長文・詳細な回答を求める場合は各AIの有料プランが有利な場合があります。</p></details>
-<details><summary>購入後すぐ使えますか？</summary><p>クレジット決済後、製品URL等をご案内します。URLを開いてすぐ利用できます。</p></details>
-<details><summary>返金できますか？</summary><p>デジタル商品の性質上、購入後の返金には対応していません。無料版で操作感をご確認のうえご購入ください。</p></details>
-</div>
-</div>
-</section>
-<section>
-<div class="wrap narrow">
-<div class="eyebrow">DEVELOPER</div><h2>開発者　高瀬リンネ</h2>
-<p>占星術歴12年。逢坂杏氏に師事し、3年間の弟子入りと国内外の占星術書、実際の鑑定現場を通じて知見を蓄積してきました。</p>
-<p>STELLARIUMは、ホロスコープの計算結果を「見るだけ」で終わらせず、AIとの対話にそのまま使える形へ変えるための製品です。</p>
-</div>
-</section>
-<section style="text-align:center">
-<div class="wrap narrow"><div class="eyebrow">STELLARIUM</div><h2>あなたの星を、<br><span class="gold">あなたのAIで読む。</span></h2><p class="lead">生年月日を入力。チャートを作成。<br>ボタンひとつでコピーして、いつものAIへ。</p><div class="price-row"><span class="pill">¥14,980（税込）</span><span class="pill">買い切り</span></div><a class="cta" href="https://buy.stripe.com/aFa8wQ2oQ7OV3vvcid97G08" target="_blank" rel="noopener">STELLARIUMを手に入れる →</a></div>
-</section>
-<footer class="footer"><div style="font-family:'Cormorant Garamond',serif;color:var(--gold);letter-spacing:.35em;margin-bottom:18px">STELLARIUM</div><div><a href="https://stellarium-lp-vercel-r1set1w5y-rinnes-projects-1a4f2389.vercel.app/legal/tokushoho.html">特定商取引法に基づく表記</a><a href="https://stellarium-lp-vercel-r1set1w5y-rinnes-projects-1a4f2389.vercel.app/legal/privacy.html">プライバシーポリシー</a><a href="https://stellarium-lp-vercel-r1set1w5y-rinnes-projects-1a4f2389.vercel.app/legal/disclaimer.html">免責事項</a></div><div style="margin-top:18px">© 2026 STELLARIUM</div></footer>
-<div class="sticky"><a class="cta" href="#purchase">¥14,980 買い切り｜製品版を見る →</a></div>
+<section class="hero"><div class="wrap"><div class="logo">STELLARIUM</div><div class="eyebrow" style="margin-top:25px">AI-READY HOROSCOPE</div><h1><span class="keep">ホロスコープ全部を、</span><br><span class="gold keep">ボタンひとつでAIへ。</span></h1><p class="hero-claim"><span class="keep">生年月日を入れる。星を出す。</span><br><span class="keep">コピーする。あとは、</span><br class="mobile-only"><span class="keep">いつものAIに貼るだけ。</span></p><p class="subline">STELLARIUMは、ネイタル・相性・トランジット・三重円のチャート情報を、AIが読めるテキストとしてまとめてコピーできるAI連携型ホロスコープツールです。ChatGPT、Claude、Geminiなど、好きなAIで使えます。</p><div class="price-row"><span class="pill">¥14,980（税込）</span><span class="pill">買い切り</span><span class="pill">登録不要</span></div><a class="cta" href="#purchase">STELLARIUMを手に入れる →</a><a class="subcta" href="https://stellarium.vercel.app/" target="_blank" rel="noopener">まず無料版を試す</a><p class="micro">購入後すぐ利用可能 ／ 無料AIでも利用可能 ／ PC・スマホ対応</p><div class="flow"><div class="flow-card"><span>01</span><strong>生年月日を入力</strong></div><div class="flow-card"><span>02</span><strong>チャートを作成</strong></div><div class="flow-card"><span>03</span><strong><span class="keep">ボタンひとつで</span><br class="mobile-only"><span class="keep">コピー</span></strong></div><div class="flow-card"><span>04</span><strong>好きなAIへ貼る</strong></div></div><figure class="hero-shot"><img src="https://stellarium-lp-vercel-r1set1w5y-rinnes-projects-1a4f2389.vercel.app/lp-assets/stellarium-natal-wheel.png" alt="STELLARIUMのホロスコープ画面"></figure></div></section>
+<section><div class="wrap narrow" style="text-align:center"><div class="eyebrow">60-SECOND DEMO</div><h2>実際の操作は、<span class="gold">これだけ。</span></h2><p class="muted">生年月日を入力 → チャート作成 → AI用データをコピー。スマホでも使えます。</p><div style="max-width:360px;margin:34px auto 0;aspect-ratio:9/16;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#000;box-shadow:0 18px 60px rgba(0,0,0,.5)"><iframe src="https://www.youtube.com/embed/ACaIGdtETig?rel=0&modestbranding=1&playsinline=1" title="STELLARIUM デモ" style="width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div></section>
+<section><div class="wrap narrow"><div class="eyebrow">WHY STELLARIUM</div><h2><span class="keep">AIはもう、占星術を</span><br class="mobile-only"><span class="keep">かなり読めます。</span><br><span class="gold keep">だからこそ「何を渡すか」が</span><br class="mobile-only"><span class="gold keep">重要です。</span></h2><div class="truth"><p>生年月日だけをAIに伝えても、かなり詳しい星読みが返ってくる時代になりました。</p><p>STELLARIUMの価値は、<strong>「AIには占星術ができないから」ではありません。</strong></p><p>AI任せの計算ではなく、STELLARIUMで確定したチャート情報を、毎回同じ形式で、そのままAIへ渡せること。さらに、12年間の実践から作った「読み方のルール」まで一緒に渡せることです。</p></div><p class="lead">計算はSTELLARIUM。<br>解釈は、あなたが選んだAI。<br><span class="gold">AIを変えても、同じ星のデータから始められます。</span></p></div></section>
+<section><div class="wrap"><div class="section-head"><div class="eyebrow">THE DIFFERENCE</div><h2><span class="desktop-only">ホロスコープを見るソフトから、<br>ホロスコープを<span class="gold">使う</span>ソフトへ。</span><span class="mobile-only"><span class="keep">ホロスコープを見る</span><br><span class="keep">ソフトから、</span><br><span class="keep">ホロスコープを<span class="gold">使う</span></span><br><span class="keep">ソフトへ。</span></span></h2><p>従来のホロスコープソフトは、チャートを表示して読むためのもの。STELLARIUMは、そのチャート情報をAIとの対話に持ち出すところまでを一つの操作にします。</p></div><div class="compare"><div class="card"><h3>従来の使い方</h3><ul class="clean"><li>チャートを作る</li><li>天体・ハウス・アスペクト表を見る</li><li>必要な情報を拾う</li><li>自分で文章にしてAIへ渡す</li><li>質問ごとにまた整える</li></ul></div><div class="card primary"><h3 class="gold">STELLARIUM</h3><ul class="clean"><li>チャートを作る</li><li>AI用データをワンタップコピー</li><li>質問テーマを選ぶ</li><li>読み方のルールごとコピー</li><li>好きなAIへ貼って相談する</li></ul></div></div></div></section>
+<section><div class="wrap"><div class="section-head"><div class="eyebrow">THREE VALUES</div><h2><span class="desktop-only">STELLARIUMがしているのは、<br>ただの「AI占い」ではありません。</span><span class="mobile-only"><span class="keep">STELLARIUMが</span><br><span class="keep">しているのは、</span><br><span class="keep">ただの「AI占い」では</span><br><span class="keep">ありません。</span></span></h2></div><div class="grid3"><div class="feature"><b>01｜正確なチャートを固定</b><p>天体・サイン・ハウス・主要アスペクトなどをSTELLARIUM側で計算。AIごとの計算結果に依存せず、同じデータを使えます。</p></div><div class="feature"><b>02｜AI用テキストに一発変換</b><p>チャートを眺めながら情報を書き写す必要はありません。必要な情報を、AIが読める形でまとめてコピーします。</p></div><div class="feature"><b>03｜12年間の「読み方」も渡す</b><p>単なる星の一覧ではなく、データ優先・勝手な補完をしない等のルールと、実践で磨いた読み方をAIへ渡せます。</p></div></div></div></section>
+<section><div class="wrap"><div class="section-head"><div class="eyebrow">USE YOUR AI</div><h2><span class="keep">AIサービスに、</span><br class="mobile-only"><span class="gold keep">閉じ込められない。</span></h2><p>専用AIの中だけで完結するサービスではありません。STELLARIUMはチャートと読み方を「持ち出せる形」にします。</p></div><div class="grid3"><div class="feature"><b>ChatGPT</b><p>普段の会話の延長で、仕事・恋愛・才能・人間関係を深掘り。</p></div><div class="feature"><b>Claude</b><p>長い文脈や文章的な読みを含め、同じチャートデータから自由に相談。</p></div><div class="feature"><b>Geminiほか</b><p>テキストを貼れるAIなら利用可能。AIが進化すれば、その進化をそのまま使えます。</p></div></div><p class="proof">「どのAIが正しいか」を選ぶのではなく、<strong>どのAIにも同じ確定データを渡せる</strong>。それがSTELLARIUMの設計です。</p></div></section>
+<section><div class="wrap"><div class="section-head"><div class="eyebrow">90+ THEMES</div><h2><span class="desktop-only">「何を聞けばいい？」まで、<br>STELLARIUMに入っています。</span><span class="mobile-only"><span class="keep">「何を聞けばいい？」まで、</span><br><span class="keep">STELLARIUMに</span><br><span class="keep">入っています。</span></span></h2><p>チャートを出したあとに迷わないよう、90テーマ以上の鑑定メニューを用意しています。</p></div><div class="usecases"><div class="usecase">「この人と付き合って大丈夫？」を相性図から見る</div><div class="usecase">「自分の才能は何？」を出生図から整理する</div><div class="usecase">「転職するなら今？」を現在の星と重ねる</div><div class="usecase">「なぜ同じ恋愛を繰り返す？」を出生図から読む</div><div class="usecase">「子どもにはどう伝えれば届く？」を親子の星から考える</div><div class="usecase">「今は動く時期？待つ時期？」を三重円で考える</div></div></div></section>
+<section><div class="wrap"><div class="section-head"><div class="eyebrow">PRODUCT</div><h2>製品版で使えるもの</h2></div><div class="grid3"><div class="feature"><b>ネイタル</b><p>性格、才能、仕事、恋愛、人生テーマ。</p></div><div class="feature"><b>シナストリー</b><p>恋愛、親子、友人、仕事仲間、上司・部下など二人の関係。</p></div><div class="feature"><b>トランジット</b><p>今月、今年、転機、仕事・恋愛の現在地。</p></div><div class="feature"><b>三重円</b><p>出生図と現在・進行の星を重ね、人生の流れを見る。</p></div><div class="feature"><b>90テーマ以上</b><p>恋愛・仕事・お金・才能・相性・人間関係・時期読み。</p></div><div class="feature"><b>購入者向けガイド</b><p>AIへの渡し方、回答の見方、個人情報やハルシネーションへの注意。</p></div></div></div></section>
+<section><div class="wrap narrow"><div class="truth"><div class="eyebrow">REAL USE CASE</div><h2 style="margin-top:12px">占いに詳しくなくても、<br><span class="gold">星を創作や自己理解に使える。</span></h2><p>AI動画クリエイターの方が、STELLARIUMのチャートデータをClaudeへ渡し、「自分が本当に作りたいもの」を掘り下げる過程をnoteで公開しています。</p><a class="subcta" style="margin-left:0" href="https://note.com/ponzponz15/n/n97101dfc9d4a" target="_blank" rel="noopener">実際の使用例を読む →</a></div></div></section>
+<section><div class="wrap"><div class="section-head"><div class="eyebrow">VOICE</div><h2>実際に使った方の声</h2></div><div class="voice-grid"><div class="voice"><blockquote>「いままで占いとか信じなかったけど、自分が生きてきたのは星の通りだったんだと腑に落ちた。」</blockquote><small>AI動画クリエイター／講師の方より</small></div><div class="voice"><blockquote>「どのAIに聞いても同じ答えが返ってきたので、私も生きる希望が湧いてきました。」</blockquote><small>AI初心者向けサービス提供者の方より</small></div></div><p class="micro" style="text-align:center">※個人の感想です。鑑定結果や効果を保証するものではありません。</p></div></section>
+<section><div class="wrap narrow"><div class="eyebrow">WHY I MADE THIS</div><h2><span class="keep">12年間の占星術を、</span><br><span class="gold keep">「自分で使える道具」に</span><br class="mobile-only"><span class="gold keep">したかった。</span></h2><p>私は占星術を学び、実際の鑑定現場で人の人生を読んできました。一方で、自分自身が占いに答えを求め続けた経験もあります。</p><p>だから作りたかったのは、誰かに答えを預け続けるためのサービスではありません。自分の星を、自分の手元で何度でも考えるための道具です。</p><p>AIが進化した今なら、専門知識を何年も学ばなくても、正確なチャートと読み方さえ渡せば、深い対話ができる。STELLARIUMは、そのための橋です。</p></div></section>
+<section id="purchase"><div class="wrap"><div class="offer"><div class="eyebrow">PRODUCT EDITION</div><h2>STELLARIUM 製品版</h2><div class="price">¥14,980</div><div class="buyout">税込 ／ 買い切り</div><div class="offer-list"><div>ネイタルチャート</div><div>シナストリー</div><div>トランジット</div><div>三重円</div><div>AI用ワンタップコピー</div><div>90テーマ以上の質問</div><div>12年間の読解ルール</div><div>AI活用ガイド</div><div>購入者向けGPT</div><div>無償アップデート</div></div><p class="muted">月額課金ではありません。一度購入すれば、ChatGPT・Claude・Geminiなど、好きなAIと組み合わせて使えます。</p><a class="cta" href="https://buy.stripe.com/aFa8wQ2oQ7OV3vvcid97G08" target="_blank" rel="noopener">STELLARIUMを購入する →</a><a class="subcta" href="https://stellarium.vercel.app/" target="_blank" rel="noopener">購入前に無料版を体験する</a><p class="micro">クレジット決済後、メールアドレス宛に製品URL等をご案内します。銀行振込は公式LINEからお問い合わせください。</p></div></div></section>
+<section><div class="wrap narrow"><div class="section-head"><div class="eyebrow">PRIVACY</div><h2><span class="keep">出生情報を扱うから、</span><br><span class="keep">保存しない設計。</span></h2></div><div class="grid3"><div class="feature"><b>ブラウザ内で処理</b><p>基本的なチャート処理はブラウザ内で行います。</p></div><div class="feature"><b>登録不要</b><p>STELLARIUM利用のための氏名・メール登録は不要です。</p></div><div class="feature"><b>相談内容を保存しない</b><p>STELLARIUM側で相談内容を保存しません。AIへ貼った情報は各AIサービスの規約に従います。</p></div></div></div></section>
+<section><div class="wrap narrow"><div class="section-head"><div class="eyebrow">FAQ</div><h2>よくある質問</h2></div><div class="faq"><details><summary>占星術が分からなくても使えますか？</summary><p>使えます。チャートの計算とAI用データの整理はSTELLARIUMが行います。質問テーマを選び、コピーしてAIへ貼るだけです。</p></details><details><summary>生年月日だけAIに伝えるのと何が違いますか？</summary><p>生年月日だけでもAIが詳しく読む場合はあります。ただし、計算方法や採用されたハウス・アスペクト等がAI任せになります。STELLARIUMでは先にチャートデータを固定してから、AIへ解釈だけを任せられます。</p></details><details><summary>どのAIで使えますか？</summary><p>ChatGPT・Claude・Geminiなど、テキストを貼り付けられるAIで利用できます。特定AIへの加入を必須にしていません。</p></details><details><summary>無料AIでも使えますか？</summary><p>使えます。より長文・詳細な回答を求める場合は各AIの有料プランが有利な場合があります。</p></details><details><summary>購入後すぐ使えますか？</summary><p>クレジット決済後、製品URL等をご案内します。URLを開いてすぐ利用できます。</p></details><details><summary>返金できますか？</summary><p>デジタル商品の性質上、購入後の返金には対応していません。無料版で操作感をご確認のうえご購入ください。</p></details></div></div></section>
+<section><div class="wrap narrow"><div class="eyebrow">DEVELOPER</div><h2>開発者　高瀬リンネ</h2><p>占星術歴12年。逢坂杏氏に師事し、3年間の弟子入りと国内外の占星術書、実際の鑑定現場を通じて知見を蓄積してきました。</p><p>STELLARIUMは、ホロスコープの計算結果を「見るだけ」で終わらせず、AIとの対話にそのまま使える形へ変えるための製品です。</p></div></section>
+<section style="text-align:center"><div class="wrap narrow"><div class="eyebrow">STELLARIUM</div><h2><span class="keep">あなたの星を、</span><br><span class="gold keep">あなたのAIで読む。</span></h2><p class="lead">生年月日を入力。チャートを作成。<br>ボタンひとつでコピーして、いつものAIへ。</p><div class="price-row"><span class="pill">¥14,980（税込）</span><span class="pill">買い切り</span></div><a class="cta" href="https://buy.stripe.com/aFa8wQ2oQ7OV3vvcid97G08" target="_blank" rel="noopener">STELLARIUMを手に入れる →</a></div></section>
+<footer class="footer"><div style="font-family:'Cormorant Garamond',serif;color:var(--gold);letter-spacing:.35em;margin-bottom:18px">STELLARIUM</div><div><a href="https://stellarium-lp-vercel-r1set1w5y-rinnes-projects-1a4f2389.vercel.app/legal/tokushoho.html">特定商取引法に基づく表記</a><a href="https://stellarium-lp-vercel-r1set1w5y-rinnes-projects-1a4f2389.vercel.app/legal/privacy.html">プライバシーポリシー</a><a href="https://stellarium-lp-vercel-r1set1w5y-rinnes-projects-1a4f2389.vercel.app/legal/disclaimer.html">免責事項</a></div><div style="margin-top:18px">© 2026 STELLARIUM</div></footer><div class="sticky"><a class="cta" href="#purchase">¥14,980 買い切り｜製品版を見る →</a></div>
+<script>(function(){const sticky=document.querySelector('.sticky');if(!sticky)return;const update=()=>{if(window.innerWidth<=760&&window.scrollY>700){sticky.classList.add('show')}else{sticky.classList.remove('show')}};window.addEventListener('scroll',update,{passive:true});window.addEventListener('resize',update);update();})();</script>
 </body></html>
